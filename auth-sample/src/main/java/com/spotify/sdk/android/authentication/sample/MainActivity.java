@@ -21,8 +21,11 @@
 
 package com.spotify.sdk.android.authentication.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -33,6 +36,7 @@ import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
+import com.spotify.sdk.android.auth.LoginActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -46,6 +50,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button gotoToLoginButton = findViewById(R.id.gotologin);
+
+        gotoToLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                v.getContext().startActivity(intent);
+            }
+        });
 
     }
 

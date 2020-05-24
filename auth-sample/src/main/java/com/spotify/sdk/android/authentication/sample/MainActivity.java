@@ -36,7 +36,6 @@ import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
-import com.spotify.sdk.android.auth.LoginActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -56,11 +55,10 @@ public class MainActivity extends AppCompatActivity {
         gotoToLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
                 v.getContext().startActivity(intent);
             }
         });
-
     }
 
     @Override

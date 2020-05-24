@@ -11,7 +11,7 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-android:scaleType="fitXY"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -24,24 +24,9 @@ android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-<<<<<<< HEAD
-        app:layout_constraintTop_toTopOf="@+id/imageView" />
-=======
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
 
-        android:layout_marginTop="480dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.407"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </Button>
->>>>>>> 52949f8b55c6cb2d8776d3efe08c793e3b4b907f
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

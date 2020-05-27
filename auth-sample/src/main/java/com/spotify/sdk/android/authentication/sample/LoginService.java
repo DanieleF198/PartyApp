@@ -9,5 +9,5 @@ import retrofit2.http.Path;
 public interface LoginService {
 
     @GET("posts")
-    Call<User> getUsers();
+    Call<List<User>> getUsers();
 }

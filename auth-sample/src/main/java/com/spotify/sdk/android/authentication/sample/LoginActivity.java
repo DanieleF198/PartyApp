@@ -27,35 +27,39 @@ public class LoginActivity extends AppCompatActivity {
 
         LoginService service = RetrofitInstance.getRetrofitInstance().create(LoginService.class);
         Log.d("PACKAGE_NAME", getApplicationContext().getPackageName()+"");
+        Intent intent = new Intent(this, MainActivity.class);
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-                /*  username.getText();
-                password.getText();*/
-
               Log.d("LOGINBUTTON_CLICKED","true");
-                Call<User> call = service.getUsers();
+              Call<List<User>> call = service.getUsers();
 
-                call.enqueue(new Callback<User>() {
+                call.enqueue(new Callback<List<User>>() {
                     @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
+                    public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                         Log.d("goin_onResponse","true");
-                        Log.d("response.body()", response.body()+"");
-                        Log.d("response.code()", response.code()+"");
+                        if(response.body()!=null) {
+                            for (User u : response.body()) {
+                                if(u.getUsername().equals(username.getText().toString()) && u.getPassword().equals(password.getText().toString()))
+                                    startActivity(intent);
+                                else
+                                    Log.d("DEBUG1: ",u.getPassword()+" "+password.getText());
+                            }
+                        }
+                        //username.getText();
+                        //password.getText();
+
                     }
 
                     @Override
-                    public void onFailure(Call<User> call, Throwable t) {
+                    public void onFailure(Call<List<User>> call, Throwable t) {
                         Log.d("goin_onFailure","true");
                         Log.d("eccezione",t+"");
-
                     }
                 });
-
             }
         });
 

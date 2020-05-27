@@ -6,6 +6,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -38,17 +39,18 @@ public class PublicLobbyHomepageActivity extends AppCompatActivity {
                     return;
                 }
                 List<Lobby> lobbys = response.body();
-
+                Collections.sort(lobbys);
                 for(Lobby lobby : lobbys){
-                    String content = "";
-                    content += "LobbyID: " + lobby.getId() + "\n";
-                    content += "name: " + lobby.getName() + "\n";
-                    if(lobby.getGenre() != null){content += "genre: " + lobby.getGenre() + "\n";}
-                    if(lobby.getMood() != null){content += "mood: " + lobby.getMood() + "\n";}
-                    if(lobby.getPublicType()){content += "public \n";} else {content += "private \n";}
-                    content += "partecipantNumber: " + lobby.getPartecipantNumber() + "\n";
-
-                    textViewResult.append(content);
+                    if(lobby.getPublicType()){
+                        String content = "";
+                        content += "LobbyID: " + lobby.getId() + "\n";
+                        content += "name: " + lobby.getName() + "\n";
+                        if(lobby.getGenre() != null){content += "genre: " + lobby.getGenre() + "\n";}
+                        if(lobby.getMood() != null){content += "mood: " + lobby.getMood() + "\n";}
+                        content += "partecipantNumber: " + lobby.getPartecipantNumber() + "\n";
+                        content += "\n";
+                        textViewResult.append(content);
+                    }
                 }
             }
 

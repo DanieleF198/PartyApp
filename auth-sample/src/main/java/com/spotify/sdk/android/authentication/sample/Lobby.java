@@ -1,6 +1,6 @@
 package com.spotify.sdk.android.authentication.sample;
 
-public class Lobby {
+public class Lobby implements Comparable< Lobby >{
     private String lobbyID;
     private String name;
     private String genre;
@@ -53,4 +53,11 @@ public class Lobby {
     }
 
     public void setPartecipantNumber(int partecipantNumber) { this.partecipantNumber = partecipantNumber; }
+
+    @Override
+    public int compareTo(Lobby lobby) {
+        Integer i1 = this.getPartecipantNumber();
+        Integer i2 = lobby.getPartecipantNumber();
+        return i2.compareTo(i1);
+    }
 }

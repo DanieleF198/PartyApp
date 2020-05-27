@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -24,6 +25,8 @@ public class LoginActivity extends AppCompatActivity {
         EditText username = findViewById(R.id.username);
         EditText password = findViewById(R.id.password);
         Button loginButton = findViewById(R.id.loginButton);
+        TextView errorView = findViewById(R.id.errorView);
+
 
         LoginService service = RetrofitInstance.getRetrofitInstance().create(LoginService.class);
         Log.d("PACKAGE_NAME", getApplicationContext().getPackageName()+"");
@@ -46,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
                                 if(u.getUsername().equals(username.getText().toString()) && u.getPassword().equals(password.getText().toString()))
                                     startActivity(intent);
                                 else
-                                    Log.d("DEBUG1: ",u.getPassword()+" "+password.getText());
+                                    errorView.setVisibility(View.VISIBLE);
                             }
                         }
                         //username.getText();

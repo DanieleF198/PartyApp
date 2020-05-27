@@ -66,7 +66,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        Button gotoListsButton = findViewById(R.id.gotoLists);
 
+        gotoListsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this,PublicLobbyHomepageActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
 
     }
 }

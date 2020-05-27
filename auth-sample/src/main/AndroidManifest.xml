@@ -24,6 +24,8 @@
             android:configChanges="keyboardHidden|keyboard|orientation|screenSize">
 
         </activity>
+
+        <activity android:name=".PublicLobbyHomepageActivity"></activity>
     </application>
 
 </manifest>

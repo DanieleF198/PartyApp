@@ -18,7 +18,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PublicLobbyHomepageActivity extends AppCompatActivity {
     private TextView textViewResult;
-    private static final String LOBBY_URL = "http://192.168.1.148:3000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,15 +26,9 @@ public class PublicLobbyHomepageActivity extends AppCompatActivity {
 
         textViewResult = findViewById(R.id.text_view_result);
 
+        PublicLobbyHomepageService retrofit = RetrofitInstance.getRetrofitInstance().create(PublicLobbyHomepageService.class);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(LOBBY_URL + "/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        PublicLobbyHomepageService lobbyHomepageService = retrofit.create(PublicLobbyHomepageService.class);
-
-        Call<List<Lobby>> call = lobbyHomepageService.getLobbys();
+        Call<List<Lobby>> call = retrofit.getLobbys();
 
         call.enqueue(new Callback<List<Lobby>>() {
             @Override

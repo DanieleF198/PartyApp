@@ -45,6 +45,10 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 for (User x : response.body()) {
                     if (x.getRemember()) {
+
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("remember", x);
+                        intent.putExtras(bundle);
                         startActivity(intent);
                     }
                 }

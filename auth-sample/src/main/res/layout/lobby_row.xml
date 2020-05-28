@@ -32,13 +32,23 @@
             android:text="Lobby" />
 
         <TextView
-            android:id="@+id/genreOrMoodRow"
+            android:id="@+id/hostID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/lobbyRowName"
             android:layout_marginStart="21dp"
             android:layout_marginTop="2dp"
             android:layout_toEndOf="@+id/prodotti_image"
+            android:text="hostID"/>
+
+        <TextView
+            android:id="@+id/genreOrMoodRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lobbyRowName"
+            android:layout_marginStart="21dp"
+            android:layout_marginTop="2dp"
+            android:layout_toEndOf="@+id/hostID"
             android:text="genre or mood" />
 
         <TextView

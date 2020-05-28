@@ -2,6 +2,7 @@ package com.spotify.sdk.android.authentication.sample;
 
 public class Lobby implements Comparable< Lobby >{
     private String lobbyID;
+    private String hostID;
     private String name;
     private String genre;
     private String mood;
@@ -10,11 +11,17 @@ public class Lobby implements Comparable< Lobby >{
     //there should be more attributes(?), but i don't exactly know wiches (maybe image of the lobby? the owner of the lobby?); so for now i don't touch them
 
     //getters and setters
-    public String getId() {
-        return lobbyID;
-    }
+    public String getId() { return lobbyID; }
 
     public void setId(String lobbyID) {
+        this.lobbyID = lobbyID;
+    }
+
+    public String getHostID() { return hostID; }
+
+    public void setHostID(String hostID) { this.hostID = hostID;}
+
+    public void setLobbyID(String lobbyID) {
         this.lobbyID = lobbyID;
     }
 

@@ -6,8 +6,12 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
-public interface LoginService {
+public interface UserService {
 
     @GET("posts")
     Call<List<User>> getUsers();
+
+    @GET("posts/{id}")
+    Call<User> getUserById(@Path("id") String userID);
+
 }

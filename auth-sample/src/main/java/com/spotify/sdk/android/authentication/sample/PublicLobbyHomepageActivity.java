@@ -37,9 +37,9 @@ public class PublicLobbyHomepageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_lobby_homepage);
 
-        PublicLobbyHomepageService retrofit = RetrofitInstance.getRetrofitInstance().create(PublicLobbyHomepageService.class);
+        PublicLobbyHomepageService publicLobbyHomepageService = RetrofitInstance.getRetrofitInstance().create(PublicLobbyHomepageService.class);
 
-        Call<List<Lobby>> call = retrofit.getLobbys();
+        Call<List<Lobby>> call = publicLobbyHomepageService.getLobbys();
 
         call.enqueue(new Callback<List<Lobby>>() {
             @Override

@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
         TextView errorView = findViewById(R.id.errorView);
 
 
-        LoginService service = RetrofitInstance.getRetrofitInstance().create(LoginService.class);
+        UserService service = RetrofitInstance.getRetrofitInstance().create(UserService.class);
         Log.d("PACKAGE_NAME", getApplicationContext().getPackageName()+"");
         Intent intent = new Intent(this, MainActivity.class);
 

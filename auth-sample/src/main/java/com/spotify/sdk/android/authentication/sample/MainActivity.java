@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,6 +37,12 @@ import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -50,13 +57,43 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent intent = this.getIntent();
+        Bundle bundle = intent.getExtras();
+
+
+        UserService service = RetrofitInstance.getRetrofitInstance().create(UserService.class);
+        Log.d("PACKAGE_NAME", getApplicationContext().getPackageName()+"");
+        User u = (User)bundle.getSerializable("remember");
+
+
         Button gotoToLoginButton = findViewById(R.id.gotologin);
 
         gotoToLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                v.getContext().startActivity(intent);
+
+                if(u.getRemember()){
+
+                    u.setRemember(false);
+                    Call<User> call2 = service.patchUser(u.getId(), u);
+                    call2.enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            if(!response.isSuccessful()){
+                                Log.d("User patch not success", "Code: " + response.code());
+                                return;
+                            }
+                            Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                            v.getContext().startActivity(intent);
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+                            Log.d("user patch error", "Code: " + t.toString());
+                        }
+                    });
+
+                }
             }
         });
     }

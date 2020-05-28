@@ -9,22 +9,22 @@
 
     <ImageView
         android:id="@+id/bg1"
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:scaleType="fitXY"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/bg1" />
+        app:srcCompat="@mipmap/def" />
 
     <ImageView
         android:id="@+id/bg2"
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/bg2" />
+        app:srcCompat="@mipmap/def" />
 
     <EditText
         android:id="@+id/username"
@@ -55,6 +55,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/gotoLists"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_marginTop="12dp"
+        android:text="vai alle lobby pubbliche"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginButton" />
+
     <TextView
         android:id="@+id/errorView"
         android:layout_width="wrap_content"
@@ -67,6 +77,13 @@
         android:textSize="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/def" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,23 +1,10 @@
 package com.spotify.sdk.android.authentication.sample;
 
-import java.io.Serializable;
-
-public class User implements Serializable {
+public class User {
 
     private String id;
     private String username;
     private String password;
-    private boolean remember;
-
-    public User(String username, String password,  boolean remember) {
-        this.username = username;
-        this.password = password;
-        this.remember = remember;
-    }
-
-    public User(boolean remember){
-        this.remember = false;
-    }
 
     public User(){}
 
@@ -40,11 +27,4 @@ public class User implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public boolean getRemember() {
-        return remember;
-    }
-
-    public void setRemember(boolean remember) { this.remember = remember; }
-
 }

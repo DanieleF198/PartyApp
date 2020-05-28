@@ -1,8 +1,6 @@
 package com.spotify.sdk.android.authentication.sample;
 
-import java.io.Serializable;
-
-public class User implements Serializable {
+public class User {
 
     private String id;
     private String username;
@@ -21,9 +19,17 @@ public class User implements Serializable {
 
     public User(){}
 
-    public String getId() { return id; }
+    public String getId() {
+        return id;
+    }
 
-    public void setId(String id) { this.id = id; }
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public boolean isRemember() {
+        return remember;
+    }
 
     public String getUsername() {
         return username;

@@ -1,5 +1,6 @@
 package com.spotify.sdk.android.authentication.sample;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,39 +19,35 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHolder>{
-    private List<Lobby> mLobbyList;
-    private User mhostUser;
+public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.ViewHolder>{
 
-    public static class LobbyViewHolder extends RecyclerView.ViewHolder{
-        public TextView textView1;
-        public TextView textView2;
-        public TextView textView3;
-        public TextView textView4;
-
-        public LobbyViewHolder(View itemView){
-            super(itemView);
-            textView1 = itemView.findViewById(R.id.lobbyRowName);
-            textView2 = itemView.findViewById(R.id.genreOrMoodRow);
-            textView3 = itemView.findViewById(R.id.partecipantNumberRow);
-            textView4 = itemView.findViewById(R.id.hostID);
-        }
+    public interface OnItemClickListener {
+        void onItemClick(Lobby lobby);
     }
 
-    public LobbyAdapter(List<Lobby> lobbyList) {
+    private List<Lobby> mLobbyList;
+    private User mhostUser;
+    private Context context;
+    private OnItemClickListener listener;
+
+
+
+    public LobbyAdapter(List<Lobby> lobbyList, Context context, LobbyAdapter.OnItemClickListener listener) {
         mLobbyList = lobbyList;
+        this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
-    public LobbyViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
+    public LobbyAdapter.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.lobby_row, parent, false);
-        LobbyViewHolder lvh = new LobbyViewHolder(v);
-        return lvh;
+        return new LobbyAdapter.ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull LobbyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull LobbyAdapter.ViewHolder holder, int position) {
+        holder.bind(mLobbyList.get(position), listener);
         Lobby currentItem = mLobbyList.get(position);
         holder.textView1.setText(currentItem.getName());
         if(currentItem.getGenre() != null)
@@ -85,9 +82,35 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
         });
     }
 
+
     @Override
     public int getItemCount() {
         return mLobbyList.size();
     }
 
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView textView1;
+        public TextView textView2;
+        public TextView textView3;
+        public TextView textView4;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            textView1 = itemView.findViewById(R.id.lobbyRowName);
+            textView2 = itemView.findViewById(R.id.genreOrMoodRow);
+            textView3 = itemView.findViewById(R.id.partecipantNumberRow);
+            textView4 = itemView.findViewById(R.id.hostID);
+        }
+
+        public void bind(final Lobby lobby, final LobbyAdapter.OnItemClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(lobby);
+                }
+            });
+        }
+    }
 }

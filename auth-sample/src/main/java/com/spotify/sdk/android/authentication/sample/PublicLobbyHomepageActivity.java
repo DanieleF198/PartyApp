@@ -1,5 +1,6 @@
 package com.spotify.sdk.android.authentication.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,7 +31,9 @@ public class PublicLobbyHomepageActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
+
     private List<Lobby> lobbyList;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +73,14 @@ public class PublicLobbyHomepageActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewLobby);
         recyclerView.setHasFixedSize(true);
         layoutManager =  new LinearLayoutManager(this);
-        adapter = new LobbyAdapter(passedList);
+        adapter = new LobbyAdapter(passedList, getApplicationContext(), new LobbyAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Lobby lobby) {
+                // Toast.makeText(getContext(), "Item Clicked : "+risultato.getId(), Toast.LENGTH_LONG).show();
+                intent = new Intent(getApplication(), PartyActivity.class);
+                startActivity(intent);
+            }
+        });
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 

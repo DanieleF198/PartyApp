@@ -24,9 +24,11 @@ package com.spotify.sdk.android.authentication.sample;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -40,6 +42,7 @@ import com.spotify.protocol.types.Track;
 
 import java.util.List;
 
+import androidx.appcompat.widget.Toolbar;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String CLIENT_ID = "f1afbc79a395491088b46771713b772d";
     private static final String REDIRECT_URI = "http://com.yourdomain.yourapp/callback";
     private SpotifyAppRemote mSpotifyAppRemote;
+    private Toolbar mToolbar;
 
 
     @Override
@@ -63,10 +67,13 @@ public class MainActivity extends AppCompatActivity {
 
         UserService service = RetrofitInstance.getRetrofitInstance().create(UserService.class);
         Log.d("PACKAGE_NAME", getApplicationContext().getPackageName()+"");
+        Log.d("DEBUG_BUNDLE: ",bundle+"");
         User u = (User)bundle.getSerializable("remember");
 
 
         Button gotoToLoginButton = findViewById(R.id.gotologin);
+        mToolbar = findViewById(R.id.main_toolbar);
+        setSupportActionBar(mToolbar);
 
         gotoToLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +103,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return true;
     }
 
     @Override

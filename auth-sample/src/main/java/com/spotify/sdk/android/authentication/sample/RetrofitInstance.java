@@ -15,7 +15,7 @@ public class RetrofitInstance {
 
     private static Retrofit retrofit;
 
-    private static final String BASE_URL = "http://192.168.1.184:3000/";
+    private static final String BASE_URL = "http://192.168.1.16:3000/";
 
 
     /**

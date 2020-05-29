@@ -5,6 +5,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,9 +15,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,38 +40,69 @@ public class LoginActivity extends AppCompatActivity {
         EditText password = findViewById(R.id.password);
         Button loginButton = findViewById(R.id.loginButton);
         TextView errorView = findViewById(R.id.errorView);
-
-
-        UserService service = RetrofitInstance.getRetrofitInstance().create(UserService.class);
-        Log.d("PACKAGE_NAME", getApplicationContext().getPackageName()+"");
+        
+        boolean fileExists = false;
+        String defaultJson = "{\"username\":\"\",\"password\":\"\",\"remember\":false}";
+        gson = new Gson();
         Intent intent = new Intent(this, MainActivity.class);
 
 
-        Call<List<User>> call3 = service.getUsers();
+        String[] files = getApplicationContext().fileList();
 
-        call3.enqueue(new Callback<List<User>>() {
-            @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                if (!response.isSuccessful()) {
-                    Log.d("User autoLo not success", "Code: " + response.code());
-                    return;
+        for(String s : files){
+            if(s.equals("remember.json")) {
+                //non crearlo e puoi scriverci
+                fileExists = true;
+
+                FileInputStream fis = null;
+                try {
+                    fis = getApplicationContext().openFileInput("remember.json");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-                for (User x : response.body()) {
-                    if (x.getRemember()) {
 
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("remember", x);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
+                InputStreamReader inputStreamReader =
+                        new InputStreamReader(fis, StandardCharsets.UTF_8);
+                StringBuilder stringBuilder = new StringBuilder();
+                try (BufferedReader reader = new BufferedReader(inputStreamReader)) {
+                    String line = reader.readLine();
+                    while (line != null) {
+                        stringBuilder.append(line).append('\n');
+                        line = reader.readLine();
                     }
+                } catch (IOException e) {
+                    // Error occurred when opening raw file for reading.
+                } finally {
+                    String contents = stringBuilder.toString();
+                    Log.d("STRING_BUILDER_DEBUG", stringBuilder.toString()+"");
+                    UserRemember userRemember = gson.fromJson(contents, UserRemember.class);
+                    Log.d("userRememberDEBUG", userRemember.getUsername()+" "+userRemember.getPassword()+" "+userRemember.isRemember()+" ");
+                    if(userRemember.isRemember())
+                        startAct(intent);
                 }
+
+            }
+        }
+
+
+
+
+        if(!fileExists)
+            try (FileOutputStream fos = getApplicationContext().openFileOutput("remember.json", Context.MODE_PRIVATE)) {
+                fos.write(defaultJson.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-            @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-                Log.d("user AutoLo error", "Code: " + t.toString());
-            }
-        });
+
+
+
+
+
+
+        UserService service = RetrofitInstance.getRetrofitInstance().create(UserService.class);
+
+
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,36 +122,23 @@ public class LoginActivity extends AppCompatActivity {
 
                             for (User u : response.body()) {
                                     if (u.getUsername().equals(username.getText().toString()) && u.getPassword().equals(password.getText().toString())) {
-                                        u.setRemember(true);
-                                        Call<User> call2 = service.patchUser(u.getId(), u);
-                                        call2.enqueue(new Callback<User>() {
-                                            @Override
-                                            public void onResponse(Call<User> call, Response<User> response) {
-                                                if(!response.isSuccessful()){
-                                                    Log.d("User patch not success", "Code: " + response.code());
-                                                    return;
-                                                }
 
-                                                Bundle bundle = new Bundle();
-                                                bundle.putSerializable("remember", u);
-                                                intent.putExtras(bundle);
 
-                                                startActivity(intent);
-                                                Toast.makeText(LoginActivity.this, "user will be remembered", Toast.LENGTH_SHORT).show();
-                                            }
+                                        UserRemember userRemember = new UserRemember(username.getText().toString(), password.getText().toString(), true);
+                                        String json = gson.toJson(userRemember);
+                                        try (FileOutputStream fos = getApplicationContext().openFileOutput("remember.json", Context.MODE_PRIVATE)) {
+                                            fos.write(json.getBytes());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
 
-                                            @Override
-                                            public void onFailure(Call<User> call, Throwable t) {
-                                                Log.d("user patch error", "Code: " + t.toString());
-                                            }
-                                        });
+                                        startActivity(intent);
                                     } else
                                         errorView.setVisibility(View.VISIBLE);
                                 }
                             }
                         }
-                        //username.getText();
-                        //password.getText();
+
 
                     @Override
                     public void onFailure(Call<List<User>> call, Throwable t) {
@@ -128,5 +159,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void startAct(Intent intent){
+        startActivity(intent);
     }
 }

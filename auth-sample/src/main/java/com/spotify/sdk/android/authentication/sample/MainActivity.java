@@ -21,6 +21,7 @@
 
 package com.spotify.sdk.android.authentication.sample;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
@@ -40,6 +42,8 @@ import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import androidx.appcompat.widget.Toolbar;
@@ -68,41 +72,30 @@ public class MainActivity extends AppCompatActivity {
         UserService service = RetrofitInstance.getRetrofitInstance().create(UserService.class);
         Log.d("PACKAGE_NAME", getApplicationContext().getPackageName()+"");
         Log.d("DEBUG_BUNDLE: ",bundle+"");
-        User u = (User)bundle.getSerializable("remember");
+
+        Intent intentToLoginActivity = new Intent(this, LoginActivity.class );
 
 
-        Button gotoToLoginButton = findViewById(R.id.gotologin);
+        Button gotoLoginButton = findViewById(R.id.gotologin);
         mToolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolbar);
 
-        gotoToLoginButton.setOnClickListener(new View.OnClickListener() {
+        gotoLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(u.getRemember()){
-
-                    u.setRemember(false);
-                    Call<User> call2 = service.patchUser(u.getId(), u);
-                    call2.enqueue(new Callback<User>() {
-                        @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
-                            if(!response.isSuccessful()){
-                                Log.d("User patch not success", "Code: " + response.code());
-                                return;
-                            }
-                            Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                            v.getContext().startActivity(intent);
-                        }
-
-                        @Override
-                        public void onFailure(Call<User> call, Throwable t) {
-                            Log.d("user patch error", "Code: " + t.toString());
-                        }
-                    });
-
+                Gson gson = new Gson();
+                UserRemember userRemember = new UserRemember("","", false);
+                String json = gson.toJson(userRemember);
+                try (FileOutputStream fos = getApplicationContext().openFileOutput("remember.json", Context.MODE_PRIVATE)) {
+                    fos.write(json.getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                startActivity(intentToLoginActivity);
             }
         });
+
     }
 
     @Override

@@ -116,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(Call<List<User>> call, Response<List<User>> response) {
 
                         Log.d("goin_onResponse","true");
+                        Log.d("DEBUG_RESPONSE", response.body()+"");
                         if(response.body()!=null) {
 
 

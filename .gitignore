@@ -2,6 +2,7 @@
 .idea/
 .gradle/
 auth-sample/src/main/res/layout/activity_login.xml
+auth-sample/src/main/java/com/spotify/sdk/android/authentication/sample/RetrofitInstance.java
 local.properties
 build/
 *-sample/gradle.properties

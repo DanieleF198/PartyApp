@@ -1,7 +1,7 @@
 .DS_Store
 .idea/
 .gradle/
-*.iml
+auth-sample/src/main/res/layout/activity_login.xml
 local.properties
 build/
 *-sample/gradle.properties

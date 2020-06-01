@@ -1,6 +1,8 @@
 package com.spotify.sdk.android.authentication.sample;
 
-public class Lobby implements Comparable< Lobby >{
+import java.io.Serializable;
+
+public class Lobby implements Comparable< Lobby >, Serializable {
     private String lobbyID;
     private String hostID;
     private String name;

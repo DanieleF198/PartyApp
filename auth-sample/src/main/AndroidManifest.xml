@@ -11,7 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppFullScreenTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PartyActivity"></activity>
+        <activity android:name=".PartyHostActivity"></activity>
+        <activity android:name=".UserLobbyActivity" />
+        <activity android:name=".PartyActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +23,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:configChanges="keyboardHidden|keyboard|orientation|screenSize"></activity>
+            android:configChanges="keyboardHidden|keyboard|orientation|screenSize" />
         <activity android:name=".PublicLobbyHomepageActivity" />
     </application>
 

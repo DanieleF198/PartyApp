@@ -40,17 +40,17 @@ public class LoginActivity extends AppCompatActivity {
         EditText password = findViewById(R.id.password);
         Button loginButton = findViewById(R.id.loginButton);
         TextView errorView = findViewById(R.id.errorView);
-        
+
         boolean fileExists = false;
-        String defaultJson = "{\"username\":\"\",\"password\":\"\",\"remember\":false}";
+        String defaultJson = "{\"id\":\"\",\"username\":\"\",\"password\":\"\",\"remember\":false}";
         gson = new Gson();
         Intent intent = new Intent(this, MainActivity.class);
 
 
         String[] files = getApplicationContext().fileList();
 
-        for(String s : files){
-            if(s.equals("remember.json")) {
+        for (String s : files) {
+            if (s.equals("remember.json")) {
                 //non crearlo e puoi scriverci
                 fileExists = true;
 
@@ -74,10 +74,10 @@ public class LoginActivity extends AppCompatActivity {
                     // Error occurred when opening raw file for reading.
                 } finally {
                     String contents = stringBuilder.toString();
-                    Log.d("STRING_BUILDER_DEBUG", stringBuilder.toString()+"");
+                    Log.d("STRING_BUILDER_DEBUG", stringBuilder.toString() + "");
                     UserRemember userRemember = gson.fromJson(contents, UserRemember.class);
-                    Log.d("userRememberDEBUG", userRemember.getUsername()+" "+userRemember.getPassword()+" "+userRemember.isRemember()+" ");
-                    if(userRemember.isRemember())
+                    Log.d("userRememberDEBUG", userRemember.getUsername() + " " + userRemember.getPassword() + " " + userRemember.isRemember() + " ");
+                    if (userRemember.isRemember())
                         startAct(intent);
                 }
 
@@ -85,9 +85,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
 
-
-
-        if(!fileExists)
+        if (!fileExists)
             try (FileOutputStream fos = getApplicationContext().openFileOutput("remember.json", Context.MODE_PRIVATE)) {
                 fos.write(defaultJson.getBytes());
             } catch (IOException e) {
@@ -95,72 +93,58 @@ public class LoginActivity extends AppCompatActivity {
             }
 
 
-
-
-
-
-
         UserService service = RetrofitInstance.getRetrofitInstance().create(UserService.class);
-
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-              Log.d("LOGINBUTTON_CLICKED","true");
-              Call<List<User>> call = service.getUsers();
+                Log.d("LOGINBUTTON_CLICKED", "true");
+                Call<List<User>> call = service.getUsers();
 
                 call.enqueue(new Callback<List<User>>() {
                     @Override
                     public void onResponse(Call<List<User>> call, Response<List<User>> response) {
 
-                        Log.d("goin_onResponse","true");
-                        Log.d("DEBUG_RESPONSE", response.body()+"");
-                        if(response.body()!=null) {
-
+                        Log.d("goin_onResponse", "true");
+                        Log.d("DEBUG_RESPONSE", response.body() + "");
+                        if (response.body() != null) {
 
 
                             for (User u : response.body()) {
-                                    if (u.getUsername().equals(username.getText().toString()) && u.getPassword().equals(password.getText().toString())) {
+                                if (u.getUsername().equals(username.getText().toString()) && u.getPassword().equals(password.getText().toString())) {
 
 
-                                        UserRemember userRemember = new UserRemember(username.getText().toString(), password.getText().toString(), true);
-                                        String json = gson.toJson(userRemember);
-                                        try (FileOutputStream fos = getApplicationContext().openFileOutput("remember.json", Context.MODE_PRIVATE)) {
-                                            fos.write(json.getBytes());
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
+                                    UserRemember userRemember = new UserRemember(u.getId(), username.getText().toString(), password.getText().toString(), true);
+                                    String json = gson.toJson(userRemember);
+                                    try (FileOutputStream fos = getApplicationContext().openFileOutput("remember.json", Context.MODE_PRIVATE)) {
+                                        fos.write(json.getBytes());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
 
-                                        startActivity(intent);
-                                    } else
-                                        errorView.setVisibility(View.VISIBLE);
+                                    startActivity(intent);
+                                    return;
+
                                 }
                             }
+                            errorView.setVisibility(View.VISIBLE);
                         }
+
+                    }
 
 
                     @Override
                     public void onFailure(Call<List<User>> call, Throwable t) {
-                        Log.d("goin_onFailure","true");
-                        Log.d("eccezione",t+"");
+                        Log.d("goin_onFailure", "true");
+                        Log.d("eccezione", t + "");
                     }
                 });
             }
         });
-
-        Button gotoListsButton = findViewById(R.id.gotoLists);
-
-        gotoListsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this,PublicLobbyHomepageActivity.class);
-                view.getContext().startActivity(intent);
-            }
-        });
-
     }
+
 
     private void startAct(Intent intent){
         startActivity(intent);

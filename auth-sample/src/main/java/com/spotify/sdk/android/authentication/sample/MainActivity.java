@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Gson gson = new Gson();
-                UserRemember userRemember = new UserRemember("","", false);
+                UserRemember userRemember = new UserRemember("", "","", false);
                 String json = gson.toJson(userRemember);
                 try (FileOutputStream fos = getApplicationContext().openFileOutput("remember.json", Context.MODE_PRIVATE)) {
                     fos.write(json.getBytes());
@@ -96,7 +96,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button gotoUserLobbyListButton = findViewById(R.id.gotomylobbys);
+
+        gotoUserLobbyListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent2 = new Intent(MainActivity.this,UserLobbyActivity.class);
+                view.getContext().startActivity(intent2);
+            }
+        });
+
+        Button gotoListsButton = findViewById(R.id.gotoLists);
+
+        gotoListsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,PublicLobbyHomepageActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main_menu,menu);
         return true;
     }
+
+
 
     @Override
     protected void onStart() {

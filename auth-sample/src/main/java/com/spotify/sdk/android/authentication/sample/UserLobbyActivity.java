@@ -33,21 +33,23 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 
-public class PublicLobbyHomepageActivity extends AppCompatActivity {
+public class UserLobbyActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
+    private Gson gson;
+
 
     private List<Lobby> lobbyList;
     private Intent intent;
-    private Gson gson; //QUACK
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_lobby_homepage);
+
 
         PublicLobbyHomepageService publicLobbyHomepageService = RetrofitInstance.getRetrofitInstance().create(PublicLobbyHomepageService.class);
 
@@ -67,12 +69,13 @@ public class PublicLobbyHomepageActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Lobby>> call, Throwable t) {
-                Toast.makeText(PublicLobbyHomepageActivity.this, "lobbysError", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserLobbyActivity.this, "lobbysError", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
-    public void recyclerFunction(List<Lobby> passedList){
+    public void recyclerFunction(List<Lobby> passedList){ //avresti ragione a dirci che potevamo anche usare il bundle, ma ce ne siamo ricordati mentre stavamo a fa sto codice e siccome tanto è la stessa cosa amen. DR e DF
+
         boolean fileExists = true; //se è arrivato nella main activity vuol dire che siamo loggati
         String defaultJson = "{\"id\":\"\",\"username\":\"\",\"password\":\"\",\"remember\":false}";
         gson = new Gson();
@@ -113,22 +116,23 @@ public class PublicLobbyHomepageActivity extends AppCompatActivity {
                 }
             }
         }
-
-
-        for(Iterator<Lobby> iterator = passedList.iterator(); iterator.hasNext();){
+        for (Iterator<Lobby> iterator = passedList.iterator(); iterator.hasNext(); ) {
             Lobby l = iterator.next();
-            if((!l.getPublicType()) || (l.getHostID().equals(idRemember))){
+            if (!l.getHostID().equals(idRemember)) {
                 iterator.remove();
             }
         }
         recyclerView = findViewById(R.id.recyclerViewLobby);
         recyclerView.setHasFixedSize(true);
-        layoutManager =  new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this);
         adapter = new LobbyAdapter(passedList, getApplicationContext(), new LobbyAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Lobby lobby) {
+                Log.d("LOBBY_DEBUG1: ", lobby.getGenre()+ " " + lobby.getMood() + " " + lobby.getName());
+
                 // Toast.makeText(getContext(), "Item Clicked : "+risultato.getId(), Toast.LENGTH_LONG).show();
-                intent = new Intent(getApplication(), PartyActivity.class);
+                intent = new Intent(getApplication(), PartyHostActivity.class);
+                intent.putExtra("HOST_LOBBY", lobby);
                 startActivity(intent);
             }
         });

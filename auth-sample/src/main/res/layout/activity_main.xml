@@ -40,7 +40,6 @@
         android:id="@+id/token_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include"
         tools:text="Token: 089d841ccc194c10a77afad9e1c11d54" />
@@ -49,7 +48,7 @@
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="10dp"
         android:text="Request Token"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/code_text_view" />
@@ -58,7 +57,7 @@
         android:id="@+id/code_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="34dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/token_text_view"
         tools:text="Code: 089d841ccc194c10a77afad9e1c11d54" />
@@ -67,7 +66,7 @@
         android:id="@+id/button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="10dp"
         android:text="Request Code"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
@@ -76,7 +75,7 @@
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="10dp"
         android:layout_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button2">
@@ -91,22 +90,45 @@
     </ScrollView>
 
     <Button
+        android:id="@+id/gotomylobbys"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="115dp"
+        android:text="Vai alle tue Lobby"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+
+    <Button
         android:id="@+id/gotologin"
         android:layout_width="300dp"
         android:layout_height="70dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="72dp"
-        android:text="Vai a login"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="50dp"
+        android:text="LOGOUT"
+        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/gotoLists"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="115dp"
+        android:layout_marginEnd="20dp"
+        android:text="vai alle lobby pubbliche"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
 
     <Button
         android:id="@+id/button3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginBottom="50dp"
         android:text="Get User Profile"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gotologin" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,10 +5,17 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PartyHostActivity extends AppCompatActivity {
 
@@ -45,15 +52,7 @@ public class PartyHostActivity extends AppCompatActivity {
 
                         lobby = (Lobby) getIntent().getSerializableExtra("HOST_LOBBY");
                         Log.d("LOBBY_DEBUG: ", lobby.getGenre()+" " + lobby.getMood() +" " + lobby.getName());
-
-                        if(lobby.getGenre() != null){
-                            if(lobby.getGenre().equals("Rock")){
-                                defaultMusic();
-                            }
-                        }
-                        else{ //in caso genre == null allora mood deve essere uguale a qualcosa.
-                            //per ora è codice di prova
-                        }
+                        defaultMusic(); //QUACK
                     }
 
                     @Override
@@ -67,6 +66,29 @@ public class PartyHostActivity extends AppCompatActivity {
 
     private void defaultMusic() {
         // Then we will write some more code here.
-        mSpotifyAppRemote.getPlayerApi().play("spotify:playlist:37i9dQZF1DWZNFWEuVbQpD");
+        mSpotifyAppRemote.getPlayerApi().play("spotify:track:"+lobby.getDefaultMusicID());
+        PublicLobbyHomepageService publicLobbyHomepageService = RetrofitInstance.getRetrofitInstance().create(PublicLobbyHomepageService.class);
+        lobby.setCurrentMusicID(lobby.getDefaultMusicID());
+        Call<Lobby> call = publicLobbyHomepageService.patchCurrentMusic(lobby.getLobbyID(), lobby);
+
+        call.enqueue(new Callback<Lobby>(){
+
+            @Override
+            public void onResponse(Call<Lobby> call, Response<Lobby> response) {
+                if(!response.isSuccessful()) {
+                    Log.d("Current Music Error", response.body()+" "+response.code()+ " "+response.errorBody());
+                    return;
+                }
+                Log.d("GOOD", "it's gone");
+                return; //dovrebbe aver fatto la patch
+            }
+
+            @Override
+            public void onFailure(Call<Lobby> call, Throwable t) {
+                Log.d("on failur curren update", t.toString()+"");
+                Toast.makeText(PartyHostActivity.this, "lobbysError", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

@@ -145,61 +145,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void test(){
-
-        /*Lobby lobby = new Lobby();
-
-        lobby.setCurrentMusicID("08mG3Y1vljYA6bvDt4Wqkj");
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.spotify.com/v1/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        TrackService trackService = retrofit.create(TrackService.class);
-
-        Call<Track> call2 = trackService.getTrack(lobby.getCurrentMusicID());
-
-        call2.enqueue(new Callback<Track>(){
-
-            @Override
-            public void onResponse(Call<Track> call, Response<Track> response) {
-                if(!response.isSuccessful()) {
-                    Log.d("Get track not success", response.body()+" "+response.code()+ " "+response.errorBody()); //restituisce errore 401
-                    return;
-                }
-                track = response.body();
-            }
-
-            @Override
-            public void onFailure(Call<Track> call, Throwable t) {
-                Log.d("Get track failure", t.toString()+"");
-                Toast.makeText(MainActivity.this, "lobbysError", Toast.LENGTH_SHORT).show();
-            }
-        });*/
-
         CallResult<PlayerState> callTrack =  mSpotifyAppRemote.getPlayerApi().getPlayerState();
-        callTrack.setResultCallback((playerState) -> {Log.d("DEBUG_TRACK_NAME", " "+playerState.track.duration);});
-
-
-        /*callTrack.enqueue(new Callback<PlayerState>() {
-            @Override
-            public void onResponse(Call<PlayerState> call, Response<PlayerState> response) {
-                if(!response.isSuccessful()) {
-                    Log.d("Get playerSt not succes", response.body()+" "+response.code()+ " "+response.errorBody()); //restituisce errore 401
-                    return;
-                }
-                PlayerState playerState = response.body();
-                track = playerState.track;
-                Log.d("track info", track.toString()+"");
-            }
-
-            @Override
-            public void onFailure(Call<PlayerState> call, Throwable t) {
-                Log.d("Get track failure", t.toString()+"");
-                Toast.makeText(MainActivity.this, "PlayerStateError", Toast.LENGTH_SHORT).show();
-            }
-        });*/
-
-
+        callTrack.setResultCallback((playerState) -> {Log.d("DEBUG_TRACK_NAME", " "+playerState.track.name);});
     }
 
 

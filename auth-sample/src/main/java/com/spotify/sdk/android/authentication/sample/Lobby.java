@@ -17,19 +17,11 @@ public class Lobby implements Comparable< Lobby >, Serializable {
     //there should be more attributes(?), but i don't exactly know wiches (maybe image of the lobby? the owner of the lobby?); so for now i don't touch them
     private String defaultMusicID;
     private String currentMusicID;
-    private LocalTime currentMusicTiming;
-    private LocalTime momentOfRefresh;
+    private String currentMusicTiming;
+    private String momentOfRefresh;
 
     //getters and setters
 
-
-    public LocalTime getMomentOfRefresh() {
-        return momentOfRefresh;
-    }
-
-    public void setMomentOfRefresh(LocalTime momentOfRefresh) {
-        this.momentOfRefresh = momentOfRefresh;
-    }
 
     public String getLobbyID() {
         return id;
@@ -103,18 +95,26 @@ public class Lobby implements Comparable< Lobby >, Serializable {
         this.currentMusicID = currentMusicID;
     }
 
-    public LocalTime getCurrentMusicTiming() {
-        return currentMusicTiming;
-    }
-
-    public void setCurrentMusicTiming(LocalTime currentMusicTiming) {
-        this.currentMusicTiming = currentMusicTiming;
-    }
-
     @Override
     public int compareTo(Lobby lobby) {
         Integer i1 = this.getPartecipantNumber();
         Integer i2 = lobby.getPartecipantNumber();
         return i2.compareTo(i1);
+    }
+
+    public String getCurrentMusicTiming() {
+        return currentMusicTiming;
+    }
+
+    public void setCurrentMusicTiming(String currentMusicTiming) {
+        this.currentMusicTiming = currentMusicTiming;
+    }
+
+    public String getMomentOfRefresh() {
+        return momentOfRefresh;
+    }
+
+    public void setMomentOfRefresh(String momentOfRefresh) {
+        this.momentOfRefresh = momentOfRefresh;
     }
 }

@@ -38,6 +38,7 @@ import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 
+import com.spotify.protocol.client.CallResult;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
@@ -50,6 +51,8 @@ import androidx.appcompat.widget.Toolbar;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -58,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String REDIRECT_URI = "http://com.yourdomain.yourapp/callback";
     private SpotifyAppRemote mSpotifyAppRemote;
     private Toolbar mToolbar;
+    private Track track;
+
+
 
 
     @Override
@@ -79,6 +85,17 @@ public class MainActivity extends AppCompatActivity {
         Button gotoLoginButton = findViewById(R.id.gotologin);
         mToolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolbar);
+
+
+
+
+
+
+
+
+
+
+
 
         gotoLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +144,64 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public void test(){
+
+        /*Lobby lobby = new Lobby();
+
+        lobby.setCurrentMusicID("08mG3Y1vljYA6bvDt4Wqkj");
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.spotify.com/v1/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        TrackService trackService = retrofit.create(TrackService.class);
+
+        Call<Track> call2 = trackService.getTrack(lobby.getCurrentMusicID());
+
+        call2.enqueue(new Callback<Track>(){
+
+            @Override
+            public void onResponse(Call<Track> call, Response<Track> response) {
+                if(!response.isSuccessful()) {
+                    Log.d("Get track not success", response.body()+" "+response.code()+ " "+response.errorBody()); //restituisce errore 401
+                    return;
+                }
+                track = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<Track> call, Throwable t) {
+                Log.d("Get track failure", t.toString()+"");
+                Toast.makeText(MainActivity.this, "lobbysError", Toast.LENGTH_SHORT).show();
+            }
+        });*/
+
+        CallResult<PlayerState> callTrack =  mSpotifyAppRemote.getPlayerApi().getPlayerState();
+        callTrack.setResultCallback((playerState) -> {Log.d("DEBUG_TRACK_NAME", " "+playerState.track.duration);});
+
+
+        /*callTrack.enqueue(new Callback<PlayerState>() {
+            @Override
+            public void onResponse(Call<PlayerState> call, Response<PlayerState> response) {
+                if(!response.isSuccessful()) {
+                    Log.d("Get playerSt not succes", response.body()+" "+response.code()+ " "+response.errorBody()); //restituisce errore 401
+                    return;
+                }
+                PlayerState playerState = response.body();
+                track = playerState.track;
+                Log.d("track info", track.toString()+"");
+            }
+
+            @Override
+            public void onFailure(Call<PlayerState> call, Throwable t) {
+                Log.d("Get track failure", t.toString()+"");
+                Toast.makeText(MainActivity.this, "PlayerStateError", Toast.LENGTH_SHORT).show();
+            }
+        });*/
+
+
+    }
+
 
 
     @Override
@@ -149,6 +224,8 @@ public class MainActivity extends AppCompatActivity {
 
                         // Now you can start interacting with App Remote
                         connected();
+                        test();
+
                     }
 
                     @Override

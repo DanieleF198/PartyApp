@@ -1,8 +1,10 @@
 package com.spotify.sdk.android.authentication.sample;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -10,12 +12,17 @@ import android.widget.Toast;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
+import com.spotify.protocol.types.Track;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PartyHostActivity extends AppCompatActivity {
 
@@ -24,6 +31,9 @@ public class PartyHostActivity extends AppCompatActivity {
     private SpotifyAppRemote mSpotifyAppRemote;
     private Toolbar mToolbar;
     private Lobby lobby;
+    private long thisMoment;
+    private Retrofit retrofit;
+    private Track track;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +55,7 @@ public class PartyHostActivity extends AppCompatActivity {
         SpotifyAppRemote.connect(this, connectionParams,
                 new Connector.ConnectionListener() {
 
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onConnected(SpotifyAppRemote spotifyAppRemote) {
                         mSpotifyAppRemote = spotifyAppRemote;
@@ -64,11 +75,44 @@ public class PartyHostActivity extends AppCompatActivity {
                 });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void defaultMusic() {
-        // Then we will write some more code here.
-        mSpotifyAppRemote.getPlayerApi().play("spotify:track:"+lobby.getDefaultMusicID());
-        PublicLobbyHomepageService publicLobbyHomepageService = RetrofitInstance.getRetrofitInstance().create(PublicLobbyHomepageService.class);
+        mSpotifyAppRemote.getPlayerApi().play("spotify:track:"+lobby.getDefaultMusicID()); //non possiamo prendere la track tramite player state (che si prende da playerApi).
         lobby.setCurrentMusicID(lobby.getDefaultMusicID());
+        LocalTime temp =  LocalTime.now();
+        lobby.setMomentOfRefresh(temp.toString());
+        /*
+        retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.spotify.com/v1/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        TrackService trackService = retrofit.create(TrackService.class);
+
+        Call<Track> call2 = trackService.getTrack(lobby.getCurrentMusicID());
+
+        call2.enqueue(new Callback<Track>(){
+
+            @Override
+            public void onResponse(Call<Track> call, Response<Track> response) {
+                if(!response.isSuccessful()) {
+                    Log.d("Get track not success", response.body()+" "+response.code()+ " "+response.errorBody()); //restituisce errore 401
+                    return;
+                }
+                track = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<Track> call, Throwable t) {
+                Log.d("Get track failure", t.toString()+"");
+                Toast.makeText(PartyHostActivity.this, "lobbysError", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        long pippo = track.duration;
+        Log.d("DURATA: ", pippo+"");*/
+
+        PublicLobbyHomepageService publicLobbyHomepageService = RetrofitInstance.getRetrofitInstance().create(PublicLobbyHomepageService.class);
         Call<Lobby> call = publicLobbyHomepageService.patchCurrentMusic(lobby.getLobbyID(), lobby);
 
         call.enqueue(new Callback<Lobby>(){

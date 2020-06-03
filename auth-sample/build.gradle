@@ -35,6 +35,8 @@ android {
         }
     }
 
+    aaptOptions { cruncherEnabled = false }
+
     defaultConfig {
         applicationId "com.spotify.sdk.android.authentication.sample"
 

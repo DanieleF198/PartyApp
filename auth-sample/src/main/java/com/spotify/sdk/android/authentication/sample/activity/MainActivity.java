@@ -41,7 +41,7 @@ import com.spotify.protocol.client.CallResult;
 import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
 import com.spotify.sdk.android.authentication.sample.R;
-import com.spotify.sdk.android.authentication.sample.ws.RetrofitInstance;
+import com.spotify.sdk.android.authentication.sample.ws.retrofit.RetrofitInstance;
 import com.spotify.sdk.android.authentication.sample.ws.model.UserRemember;
 import com.spotify.sdk.android.authentication.sample.ws.service.UserService;
 

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.spotify.sdk.android.authentication.sample.R;
-import com.spotify.sdk.android.authentication.sample.ws.RetrofitInstance;
+import com.spotify.sdk.android.authentication.sample.ws.retrofit.RetrofitInstance;
 import com.spotify.sdk.android.authentication.sample.ws.model.Lobby;
 import com.spotify.sdk.android.authentication.sample.ws.model.User;
 import com.spotify.sdk.android.authentication.sample.ws.service.UserService;

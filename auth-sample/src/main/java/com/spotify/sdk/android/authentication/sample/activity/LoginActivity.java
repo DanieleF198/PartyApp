@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.spotify.sdk.android.authentication.sample.R;
-import com.spotify.sdk.android.authentication.sample.ws.RetrofitInstance;
+import com.spotify.sdk.android.authentication.sample.ws.retrofit.RetrofitInstance;
 import com.spotify.sdk.android.authentication.sample.ws.model.User;
 import com.spotify.sdk.android.authentication.sample.ws.model.UserRemember;
 import com.spotify.sdk.android.authentication.sample.ws.service.UserService;

@@ -1,4 +1,4 @@
-package com.spotify.sdk.android.authentication.sample;
+package com.spotify.sdk.android.authentication.sample.ws.model;
 
 import java.io.Serializable;
 

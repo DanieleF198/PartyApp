@@ -1,4 +1,6 @@
-package com.spotify.sdk.android.authentication.sample;
+package com.spotify.sdk.android.authentication.sample.ws.service;
+
+import com.spotify.sdk.android.authentication.sample.ws.model.Lobby;
 
 import java.util.List;
 
@@ -8,7 +10,8 @@ import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.Path;
 
-public interface PublicLobbyHomepageService {
+public interface LobbyService {
+
     @GET("lobbys")
     Call<List<Lobby>> getLobbys();
 
@@ -16,5 +19,6 @@ public interface PublicLobbyHomepageService {
     Call<Lobby> getLobbyById(@Path("id") String lobbyID);
 
     @PATCH("lobbys/{id}")
-    Call<Lobby> patchCurrentMusic(@Path("id") String lobbyID, @Body Lobby lobby);
+    Call<Lobby> patchLobby(@Path("id") String lobbyID, @Body Lobby lobby);
+
 }

@@ -1,4 +1,4 @@
-package com.spotify.sdk.android.authentication.sample;
+package com.spotify.sdk.android.authentication.sample.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import retrofit2.Call;
@@ -13,10 +13,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.google.gson.Gson;
+import com.spotify.sdk.android.authentication.sample.R;
+import com.spotify.sdk.android.authentication.sample.ws.RetrofitInstance;
+import com.spotify.sdk.android.authentication.sample.ws.model.User;
+import com.spotify.sdk.android.authentication.sample.ws.model.UserRemember;
+import com.spotify.sdk.android.authentication.sample.ws.service.UserService;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

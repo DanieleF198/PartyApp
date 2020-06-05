@@ -11,10 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppFullScreenTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PartyHostActivity"></activity>
-        <activity android:name=".UserLobbyActivity" />
-        <activity android:name=".PartyActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".activity.PartyHostActivity"></activity>
+        <activity android:name=".activity.UserLobbyActivity" />
+        <activity android:name=".activity.PartyActivity" />
+        <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,9 +22,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:configChanges="keyboardHidden|keyboard|orientation|screenSize" />
-        <activity android:name=".PublicLobbyHomepageActivity" />
+        <activity android:name=".activity.PublicLobbyHomepageActivity" />
     </application>
 
 </manifest>

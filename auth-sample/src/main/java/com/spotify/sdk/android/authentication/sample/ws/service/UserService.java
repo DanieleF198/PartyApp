@@ -1,4 +1,6 @@
-package com.spotify.sdk.android.authentication.sample;
+package com.spotify.sdk.android.authentication.sample.ws.service;
+
+import com.spotify.sdk.android.authentication.sample.ws.model.User;
 
 import java.util.List;
 

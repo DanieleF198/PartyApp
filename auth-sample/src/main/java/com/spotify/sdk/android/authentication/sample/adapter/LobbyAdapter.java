@@ -1,4 +1,4 @@
-package com.spotify.sdk.android.authentication.sample;
+package com.spotify.sdk.android.authentication.sample.adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -6,7 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.spotify.sdk.android.authentication.sample.R;
+import com.spotify.sdk.android.authentication.sample.ws.RetrofitInstance;
+import com.spotify.sdk.android.authentication.sample.ws.model.Lobby;
+import com.spotify.sdk.android.authentication.sample.ws.model.User;
+import com.spotify.sdk.android.authentication.sample.ws.service.UserService;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;

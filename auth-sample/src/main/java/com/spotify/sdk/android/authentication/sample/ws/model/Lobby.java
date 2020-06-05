@@ -1,10 +1,6 @@
-package com.spotify.sdk.android.authentication.sample;
-
-import com.google.gson.annotations.SerializedName;
+package com.spotify.sdk.android.authentication.sample.ws.model;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class Lobby implements Comparable< Lobby >, Serializable {
     private String id;
@@ -18,7 +14,7 @@ public class Lobby implements Comparable< Lobby >, Serializable {
     private String defaultMusicID;
     private String currentMusicID;
     private String nextMusicID;
-    private String momentOfRefresh;
+    private String momentOfPlay;
     private long musicDuration;
 
     //getters and setters
@@ -111,12 +107,12 @@ public class Lobby implements Comparable< Lobby >, Serializable {
         return i2.compareTo(i1);
     }
 
-    public String getMomentOfRefresh() {
-        return momentOfRefresh;
+    public String getMomentOfPlay() {
+        return momentOfPlay;
     }
 
-    public void setMomentOfRefresh(String momentOfRefresh) {
-        this.momentOfRefresh = momentOfRefresh;
+    public void setMomentOfPlay(String momentOfPlay) {
+        this.momentOfPlay = momentOfPlay;
     }
 
     public String getNextMusicID() {

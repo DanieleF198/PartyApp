@@ -1,22 +1,22 @@
-package com.spotify.sdk.android.authentication.sample;
+package com.spotify.sdk.android.authentication.sample.ws.retrofit;
 
-import android.content.ContentResolver;
-import android.net.Uri;
-
-
-import java.io.IOException;
-import java.net.Socket;
-
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+        import android.content.ContentResolver;
+        import android.net.Uri;
 
 
-public class RetrofitInstanceSpotifyApi {
+        import java.io.IOException;
+        import java.net.Socket;
+
+        import retrofit2.Retrofit;
+        import retrofit2.converter.gson.GsonConverterFactory;
+
+
+public class RetrofitInstance {
 
     private static Retrofit retrofit;
 
     /*base url*/
-    private static final String BASE_URL = "https://api.spotify.com/v1/";
+    private static final String BASE_URL = "http://192.168.1.6:3000/";
 
 
     /**

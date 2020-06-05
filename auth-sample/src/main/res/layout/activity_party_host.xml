@@ -15,4 +15,13 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/openParty"
+        android:layout_width="130dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="200dp"
+        android:text="Open Party"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

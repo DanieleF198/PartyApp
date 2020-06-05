@@ -17,6 +17,7 @@ public class Lobby implements Comparable< Lobby >, Serializable {
     //there should be more attributes(?), but i don't exactly know wiches (maybe image of the lobby? the owner of the lobby?); so for now i don't touch them
     private String defaultMusicID;
     private String currentMusicID;
+    private String nextMusicID;
     private String momentOfRefresh;
     private long musicDuration;
 
@@ -116,5 +117,13 @@ public class Lobby implements Comparable< Lobby >, Serializable {
 
     public void setMomentOfRefresh(String momentOfRefresh) {
         this.momentOfRefresh = momentOfRefresh;
+    }
+
+    public String getNextMusicID() {
+        return nextMusicID;
+    }
+
+    public void setNextMusicID(String nextMusicID) {
+        this.nextMusicID = nextMusicID;
     }
 }

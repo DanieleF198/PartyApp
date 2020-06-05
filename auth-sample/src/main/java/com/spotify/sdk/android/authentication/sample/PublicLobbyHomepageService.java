@@ -12,6 +12,9 @@ public interface PublicLobbyHomepageService {
     @GET("lobbys")
     Call<List<Lobby>> getLobbys();
 
+    @GET("lobbys/{id}")
+    Call<Lobby> getLobbyById(@Path("id") String lobbyID);
+
     @PATCH("lobbys/{id}")
     Call<Lobby> patchCurrentMusic(@Path("id") String lobbyID, @Body Lobby lobby);
 }

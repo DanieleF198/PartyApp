@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
 
-    private static final String BASE_URL = "http://192.168.1.18";
+    private static final String BASE_URL = "https://api.spotify.com/v1/";
 
     private static Retrofit.Builder builder =
             new Retrofit.Builder()

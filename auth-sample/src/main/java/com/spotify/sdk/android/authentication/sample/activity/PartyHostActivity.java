@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+import okhttp3.Request;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -138,12 +139,16 @@ public class PartyHostActivity extends AppCompatActivity {
                                             }
                                         };
 
+                                        /*
                                         callGetPlayer.enqueue(getPlayerCallback);
                                         Call<CurrentlyPlayingContext> newCall;
-                                        do {
-                                            newCall = callGetPlayer.clone();
-                                            newCall.enqueue(getPlayerCallback);
-                                        }while(true);
+                                        newCall = callGetPlayer.clone();
+                                        newCall.enqueue(getPlayerCallback);
+                                        */
+
+                                        PollingPlaybackState pollingPlaybackState = new PollingPlaybackState();
+                                        pollingPlaybackState.execute(callGetPlayer);
+
                                     }
 
                                     @Override
@@ -255,6 +260,38 @@ public class PartyHostActivity extends AppCompatActivity {
                 default:
                     // Handle other cases
             }
+        }
+    }
+
+    class PollingPlaybackState extends AsyncTask<Call<CurrentlyPlayingContext>, Void, Void>{
+
+
+        @Override
+        protected Void doInBackground(Call<CurrentlyPlayingContext>... param) {
+
+            Call<CurrentlyPlayingContext> call = param[0];
+            Call<CurrentlyPlayingContext> newCall;
+            CurrentlyPlayingContext currentlyPlayingContext;
+
+            try {
+
+                do {
+                    newCall = call.clone();
+                    currentlyPlayingContext = newCall.execute().body();
+                    if (newCall.isExecuted())
+                        newCall.cancel();
+                    Log.d("CURRENTLYPLAYINGCONT", currentlyPlayingContext.getProgress_ms()+"");
+
+                }while (true);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+
+
+            return null;
         }
     }
 

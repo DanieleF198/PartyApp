@@ -122,32 +122,28 @@ public class PartyHostActivity extends AppCompatActivity {
                                     @Override
                                     public void onResponse(Call<Lobby> call, Response<Lobby> response) {
 
+                                        Lobby lobby = response.body();
+                                        lobby.setCurrentMusicID(lobby.getDefaultMusicID());
+                                        //fare gli altri set
+                                        //patchLobby();
+
+                                        //Qui sopra far partire per la prima volta la musica
+                                        //una volta partita per la prima volta utilizzate l'asynctask per capire quando finisce (dovrete sempre utilizzare l'async
+                                        //di polling per capire quando finisce la musica)
+                                        //quando finisce entrate nella onPostExecute, patchate la lobby e fate partire la nuova canzone
+                                        //la nuova canzone che deve partire deve essere la vecchia next
+                                        //come fate partire nel onPostExecute la vecchia next, questa deve diventare poi la current
+                                        //con l'end vote assicuratevi che cliccandolo si patcha la lobby e SOLO la next music
+
+
+
+                                        //Player Service
                                         PlayerService playerService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(PlayerService.class);
                                         Call<CurrentlyPlayingContext> callGetPlayer = playerService.getInfoCurrentUserPlayback("Bearer "+accessToken);
-                                        Callback<CurrentlyPlayingContext> getPlayerCallback = new Callback<CurrentlyPlayingContext>() {
-                                            @Override
-                                            public void onResponse(Call<CurrentlyPlayingContext> call, Response<CurrentlyPlayingContext> response) {
-
-                                                Log.d("DEBUG_GETPLAYER_resp", response.body() + "");
-
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<CurrentlyPlayingContext> call, Throwable t) {
-                                                Log.d("DEBUG_GETPLAYER_fail", t.getMessage());
-
-                                            }
-                                        };
-
-                                        /*
-                                        callGetPlayer.enqueue(getPlayerCallback);
-                                        Call<CurrentlyPlayingContext> newCall;
-                                        newCall = callGetPlayer.clone();
-                                        newCall.enqueue(getPlayerCallback);
-                                        */
-
+                                        //Start AsyncTask
                                         PollingPlaybackState pollingPlaybackState = new PollingPlaybackState();
                                         pollingPlaybackState.execute(callGetPlayer);
+                                        //End Player Service
 
                                     }
 
@@ -271,29 +267,40 @@ public class PartyHostActivity extends AppCompatActivity {
 
             Call<CurrentlyPlayingContext> call = param[0];
             Call<CurrentlyPlayingContext> newCall;
+            CurrentlyPlayingContext currentlyPlayingContextTemp;
             CurrentlyPlayingContext currentlyPlayingContext;
+            int durationTrack;
 
             try {
 
+                currentlyPlayingContext = call.execute().body();
+                durationTrack = currentlyPlayingContext.getItem().getDuration_ms();
+
                 do {
                     newCall = call.clone();
-                    currentlyPlayingContext = newCall.execute().body();
+                    currentlyPlayingContextTemp = newCall.execute().body();
                     if (newCall.isExecuted())
                         newCall.cancel();
-                    Log.d("CURRENTLYPLAYINGCONT", currentlyPlayingContext.getProgress_ms()+"");
+                    Log.d("CURRENTLYPLAYINGCONT", currentlyPlayingContextTemp.getProgress_ms()+"");
 
-                }while (true);
+                }while (currentlyPlayingContextTemp.getProgress_ms() < durationTrack-1000);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-
-
-
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+
+
+        }
     }
+
+
 
 
 

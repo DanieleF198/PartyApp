@@ -73,11 +73,20 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    repositories {
+        mavenCentral()
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 
 dependencies {
     //implementation files('../auth-lib/spotify-auth-release-1.2.3.aar') // Optional as local aar file dependency
-    implementation 'com.spotify.android:auth:1.2.3' // Maven dependency
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.spotify.android:auth:1.2.3'// Maven dependency
+    implementation 'androidx.browser:browser:1.2.0'
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.squareup.okhttp3:okhttp:3.12.3'
@@ -98,4 +107,11 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
 
     implementation 'com.google.android.material:material:1.2.0-alpha06'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
+
+    compile (
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.4.1'],
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.4.1'],
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.4.1']
+    )
 }

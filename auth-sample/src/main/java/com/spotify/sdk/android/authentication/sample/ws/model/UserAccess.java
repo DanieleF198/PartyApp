@@ -7,6 +7,17 @@ public class UserAccess {
     private String access_token;
     private String token_type;
     private int expires_in;
+    private String state;
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+
 
 
     public String getAccess_token() {

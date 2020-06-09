@@ -14,6 +14,9 @@
         <activity android:name=".activity.PartyHostActivity"></activity>
         <activity android:name=".activity.UserLobbyActivity" />
         <activity android:name=".activity.PartyActivity" />
+        <activity
+            android:name="com.spotify.sdk.android.authentication.LoginActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -93,7 +93,7 @@ public class PartyHostActivity extends AppCompatActivity {
                             .showAuthView(true)
                             .build();
 
-
+        /* Auth */
         AuthorizationRequest.Builder builder =
                 new AuthorizationRequest.Builder(CLIENT_ID, TOKEN, REDIRECT_URI);
 
@@ -122,18 +122,42 @@ public class PartyHostActivity extends AppCompatActivity {
                                     public void onResponse(Call<Lobby> call, Response<Lobby> response) {
 
                                         PlayerService playerService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(PlayerService.class);
-                                        Call<CurrentlyPlayingContext> getPlayer = playerService.getInfoCurrentUserPlayback("Bearer "+accessToken);
-                                        getPlayer.enqueue(new Callback<CurrentlyPlayingContext>() {
-                                            @Override
-                                            public void onResponse(Call<CurrentlyPlayingContext> call, Response<CurrentlyPlayingContext> response) {
-                                                Log.d("DEBUG_GETPLAYER_resp",response.body()+"");
-                                            }
+                                        Call<CurrentlyPlayingContext> callGetPlayer = playerService.getInfoCurrentUserPlayback("Bearer "+accessToken);
 
-                                            @Override
-                                            public void onFailure(Call<CurrentlyPlayingContext> call, Throwable t) {
-                                                Log.d("DEBUG_GETPLAYER_fail",t.getMessage());
-                                            }
-                                        });
+                                            callGetPlayer.enqueue(new Callback<CurrentlyPlayingContext>() {
+                                                @Override
+                                                public void onResponse(Call<CurrentlyPlayingContext> call, Response<CurrentlyPlayingContext> response) {
+                                                    Log.d("DEBUG_GETPLAYER_resp", response.body() + "");
+
+
+                                                    do {
+                                                        callGetPlayer.clone().enqueue(new Callback<CurrentlyPlayingContext>() {
+                                                            @Override
+                                                            public void onResponse(Call<CurrentlyPlayingContext> call, Response<CurrentlyPlayingContext> response) {
+
+                                                                Log.d("DEBUG_GETPLAYER", response.body()+" ");
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure(Call<CurrentlyPlayingContext> call, Throwable t) {
+                                                                Log.d("DEBUG_GETPLAYER_fail", t.getMessage());
+                                                            }
+                                                        });
+
+                                                    } while(callGetPlayer.isExecuted());
+
+
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<CurrentlyPlayingContext> call, Throwable t) {
+                                                    Log.d("DEBUG_GETPLAYER_fail", t.getMessage());
+                                                }
+                                            });
+
+
+
+
                                     }
 
                                     @Override

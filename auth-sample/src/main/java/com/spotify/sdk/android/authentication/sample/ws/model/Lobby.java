@@ -14,7 +14,7 @@ public class Lobby implements Comparable< Lobby >, Serializable {
     private String defaultMusicID;
     private String currentMusicID;
     private String nextMusicID;
-    private String momentOfPlay;
+    private long momentOfPlay;
     private long musicDuration;
 
     //getters and setters
@@ -107,11 +107,11 @@ public class Lobby implements Comparable< Lobby >, Serializable {
         return i2.compareTo(i1);
     }
 
-    public String getMomentOfPlay() {
+    public long getMomentOfPlay() {
         return momentOfPlay;
     }
 
-    public void setMomentOfPlay(String momentOfPlay) {
+    public void setMomentOfPlay(long momentOfPlay) {
         this.momentOfPlay = momentOfPlay;
     }
 

@@ -1,6 +1,6 @@
 package com.spotify.sdk.android.authentication.sample.ws.model;
 
-public class Uri {
+public class PlayResumePlayback {
 
     private String[] uris;
 

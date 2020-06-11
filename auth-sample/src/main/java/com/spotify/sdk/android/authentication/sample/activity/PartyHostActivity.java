@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.spotify.android.appremote.api.ConnectionParams;
@@ -19,7 +18,6 @@ import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.client.CallResult;
 import com.spotify.protocol.client.Result;
-import com.spotify.protocol.types.Empty;
 import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
 import com.spotify.sdk.android.auth.AuthorizationClient;
@@ -27,30 +25,20 @@ import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
 import com.spotify.sdk.android.authentication.sample.R;
 import com.spotify.sdk.android.authentication.sample.ws.model.CurrentlyPlayingContext;
-import com.spotify.sdk.android.authentication.sample.ws.model.Uri;
+import com.spotify.sdk.android.authentication.sample.ws.model.PlayResumePlayback;
 import com.spotify.sdk.android.authentication.sample.ws.retrofit.RetrofitInstance;
 import com.spotify.sdk.android.authentication.sample.ws.retrofit.RetrofitInstanceSpotifyApi;
-import com.spotify.sdk.android.authentication.sample.ws.retrofit.RetrofitInstanceSpotifyAuthApi;
 import com.spotify.sdk.android.authentication.sample.ws.model.Lobby;
-import com.spotify.sdk.android.authentication.sample.ws.model.UserAccess;
-import com.spotify.sdk.android.authentication.sample.ws.model.UserAccessPost;
-import com.spotify.sdk.android.authentication.sample.ws.retrofit.ServiceGenerator;
 import com.spotify.sdk.android.authentication.sample.ws.service.LobbyService;
 import com.spotify.sdk.android.authentication.sample.ws.service.PlayerService;
 import com.spotify.sdk.android.authentication.sample.ws.service.SpotifyAPIService;
-import com.spotify.sdk.android.authentication.sample.ws.service.SpotifyAuthService;
 
 
 import java.io.IOException;
-import java.net.URI;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 import java.time.temporal.ChronoField;
 
-import okhttp3.Request;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -553,7 +541,7 @@ public class PartyHostActivity extends AppCompatActivity {
     }
 
     private void play(Lobby lobby, String accessToken) {
-        Uri uri = new Uri();
+        PlayResumePlayback uri = new PlayResumePlayback();
         String[] uris = {lobby.getCurrentMusicID()};
         uri.setUris(uris);
 

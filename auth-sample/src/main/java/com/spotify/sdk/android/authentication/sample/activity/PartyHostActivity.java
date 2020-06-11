@@ -144,6 +144,7 @@ public class PartyHostActivity extends AppCompatActivity {
                                                         assert temp != null;
                                                         lobby.setMomentOfPlay(temp.getLong(ChronoField.MILLI_OF_DAY));
                                                         lobby.setMusicDuration(track.duration);
+                                                        lobby.setNextMusicID(lobby.getDefaultMusicID());
                                                         patchLobby(lobby);
                                                         play(lobby, accessToken);
 

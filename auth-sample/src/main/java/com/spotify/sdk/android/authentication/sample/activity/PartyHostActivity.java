@@ -16,9 +16,6 @@ import com.google.gson.JsonObject;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
-import com.spotify.protocol.client.CallResult;
-import com.spotify.protocol.client.Result;
-import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
@@ -36,7 +33,6 @@ import com.spotify.sdk.android.authentication.sample.ws.service.SpotifyAPIServic
 
 import java.io.IOException;
 import java.time.LocalTime;
-import java.util.concurrent.TimeUnit;
 import java.time.temporal.ChronoField;
 
 import retrofit2.Call;
@@ -133,6 +129,7 @@ public class PartyHostActivity extends AppCompatActivity {
                                                         lobby.setMomentOfPlay(temp.getLong(ChronoField.MILLI_OF_DAY));
                                                         lobby.setMusicDuration(track.duration);
                                                         lobby.setNextMusicID(lobby.getDefaultMusicID());
+                                                        lobby.setOpen(true);
                                                         patchLobby(lobby);
                                                         play(lobby, accessToken);
 
@@ -143,21 +140,7 @@ public class PartyHostActivity extends AppCompatActivity {
                                                         Log.d("DEBUG", "DOVEVA anna COSì FRATELLì");
                                                     }
                                                 });
-
-
-
-                                        //Qui sopra far partire per la prima volta la musica e patchare la lobby
-                                        //una volta partita per la prima volta utilizzate l'asynctask per capire quando finisce (dovrete sempre utilizzare l'async
-                                        //di polling per capire quando finisce la musica)
-                                        //quando finisce entrate nella onPostExecute, patchate la lobby e fate partire la nuova canzone
-                                        //la nuova canzone che deve partire deve essere la vecchia next
-                                        //come fate partire nel onPostExecute la vecchia next, questa deve diventare poi la current
-                                        //con l'end vote assicuratevi che cliccandolo si patcha la lobby e SOLO la next music
-
-
-
                                     }
-
                                     @Override
                                     public void onFailure(Call<Lobby> call, Throwable t) {
 
@@ -166,74 +149,6 @@ public class PartyHostActivity extends AppCompatActivity {
 
                             }
                         });
-
-
-/*
-                        openPartyButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                                SpotifyAuthService spotifyAuthService = RetrofitInstanceSpotifyAuthApi.getRetrofitInstance().create(SpotifyAuthService.class);
-
-                                UserAccessPost userAccessPost = new UserAccessPost();
-                                userAccessPost.setGrant_type("client_credentials");
-                                Call<ResponseBody> callAuth = spotifyAuthService.authUserImplicitGrantFlow("f1afbc79a395491088b46771713b772d", "token", "http://com.yourdomain.yourapp/callback", "user-read-playback-state");
-
-                                callAuth.enqueue(new Callback<ResponseBody>() {
-                                    @Override
-                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                                        try {
-                                            Log.d("DEBUG_AUTH_RESP ", response.body().string() + " ");
-
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-
-                                        SpotifyAPIService spotifyAPIService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(SpotifyAPIService.class);
-                                       // authorizationHeader = response.body().getToken_type() + " " + response.body().getAccess_token();
-                                        Call<Track> callTrack = spotifyAPIService.getTrackById(authorizationHeader, "4wrtmc39a5N0iy1MRaaEeT");
-
-                                        callTrack.enqueue(new Callback<Track>() {
-                                            @Override
-                                            public void onResponse(Call<Track> call, Response<Track> response) {
-
-
-                                                track = response.body();
-                                                LobbyService lobbyService = RetrofitInstance.getRetrofitInstance().create(LobbyService.class);
-                                                lobbySerialized = (Lobby) getIntent().getSerializableExtra("HOST_LOBBY");
-                                                Call<Lobby> callLobbyById = lobbyService.getLobbyById(lobbySerialized.getLobbyID());
-                                                callLobbyById.enqueue(new Callback<Lobby>() {
-                                                    @Override
-                                                    public void onResponse(Call<Lobby> call, Response<Lobby> response) {
-                                                        Lobby lobby = response.body();
-                                                        PlayMusic playMusic = new PlayMusic();
-                                                        playMusic.execute(lobby);
-
-
-                                                    }
-
-                                                    @Override
-                                                    public void onFailure(Call<Lobby> call, Throwable t) {
-
-                                                    }
-                                                });
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<Track> call, Throwable t) {
-                                                Log.d("DEBUG_TRACK_FAIL: ", t.getMessage().toString() + "");
-                                            }
-                                        });
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                        Log.d("DEBUG_AUTH_FAIL: ", "FAIL");
-                                    }
-                                });
-                            }
-                        }); */
                     }
 
                     @Override
@@ -365,9 +280,112 @@ public class PartyHostActivity extends AppCompatActivity {
 
 
 
+    private void patchLobby(Lobby lobbyToPatch){
+        Log.d("DEBUG_PATCH1", "siamo quiii");
+        LobbyService lobbyService = RetrofitInstance.getRetrofitInstance().create(LobbyService.class);
+        Call<Lobby> callPatchLobby = lobbyService.patchLobby(lobbyToPatch.getLobbyID(), lobbyToPatch);
+        callPatchLobby.enqueue(new Callback<Lobby>() {
+
+            @Override
+            public void onResponse(Call<Lobby> call, Response<Lobby> response) {
+                Log.d("DEBUG_PATCH_DONE", "");
+            }
+            @Override
+            public void onFailure(Call<Lobby> call, Throwable t) {
+                Log.d("DEBUG_PATCH_FAIL", t+"");
+            }
+        });
+    }
+
+    private void play(Lobby lobby, String accessToken) {
+        PlayResumePlayback uri = new PlayResumePlayback();
+        String[] uris = {lobby.getCurrentMusicID()};
+        uri.setUris(uris);
+
+        Log.d("ARRAY CONSTRUCT", uris + "");
+        SpotifyAPIService spotifyAPIService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(SpotifyAPIService.class);
+        Call<JsonObject> responseCall = spotifyAPIService.playUserPlayback("Bearer " + accessToken, uri);
+        responseCall.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Log.d("DEBUG_PLAY", response.body() + "");
+                //Player Service
+                PlayerService playerService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(PlayerService.class);
+                Call<CurrentlyPlayingContext> callGetPlayer = playerService.getInfoCurrentUserPlayback("Bearer " + accessToken);
+                //Start AsyncTask
+                pollingPlaybackState = new PollingPlaybackState();
+                endVoteButton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+
+                        Thread setNextMusic = new Thread() {
+                            @Override
+                            public void run() {
+                                Log.d("TEST", "mi hai cliccato");
+                                lobby.setNextMusicID("spotify:track:6c2UkrZuNlLkZ7VyYcOw3V");
+                                patchLobby(lobby);
+                            }
+                        };
+                        setNextMusic.start();
+                    }
+                }); //endVote
+                pollingPlaybackState.execute(callGetPlayer);
+                //End Player Service
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.d("DEBUG_PLAY_FAIL", t.toString() + "");
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        LobbyService lobbyService = RetrofitInstance.getRetrofitInstance().create(LobbyService.class);
+        lobbySerialized = (Lobby) getIntent().getSerializableExtra("HOST_LOBBY");
+        Call<Lobby> callLobbyById = lobbyService.getLobbyById(lobbySerialized.getLobbyID());
+        callLobbyById.enqueue(new Callback<Lobby>() {
+            @Override
+            public void onResponse(Call<Lobby> call, Response<Lobby> response) {
+                Log.d("DEBUG_ONBACK", response.body()+"");
+                Lobby lobby = response.body();
+                assert lobby != null;
+                lobby.setOpen(false);
+                Log.d("DEBUG_ONBACK_LOBBY: ", lobby.getLobbyID()+"");
+                LobbyService lobbyService2 = RetrofitInstance.getRetrofitInstance().create(LobbyService.class);
+                Call<Lobby> callPatchLobby = lobbyService2.patchLobby(lobby.getLobbyID(), lobby);
+                callPatchLobby.enqueue(new Callback<Lobby>() {
+
+                    @Override
+                    public void onResponse(Call<Lobby> call, Response<Lobby> response) {
+                        Log.d("DEBUG_PATCH_DONE", "");
+                    }
+                    @Override
+                    public void onFailure(Call<Lobby> call, Throwable t) {
+                        Log.d("DEBUG_PATCH_FAIL", t+"");
+                    }
+                });
+
+            }
+            @Override
+            public void onFailure(Call<Lobby> call, Throwable t) {
+                Log.d("DEBUG_ONBACK_FAIL", t.toString()+"");
+            }
+        });
+        pollingPlaybackState.cancel(true);
+        Intent intent = new Intent(this, UserLobbyActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+}
 
 
-    class PlayMusic extends AsyncTask<Lobby, Void, Void> {
+
+
+
+    /*class PlayMusic extends AsyncTask<Lobby, Void, Void> {
 
 
         @RequiresApi(api = Build.VERSION_CODES.O)
@@ -395,7 +413,7 @@ public class PartyHostActivity extends AppCompatActivity {
                     //play music
                     play(response.body());
 
-                    /*endVoteButton.setOnClickListener(new View.OnClickListener() {
+                    *//*endVoteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
@@ -412,7 +430,7 @@ public class PartyHostActivity extends AppCompatActivity {
 
                             setNextMusic.start();
                         }
-                    }); //endVote*/
+                    }); //endVote*//*
 
                     DisableSkipNext disableSkipNext = new DisableSkipNext();
                     disableSkipNext.execute();
@@ -423,7 +441,7 @@ public class PartyHostActivity extends AppCompatActivity {
                     //decide l'host quando far partire la nextMusic con un pulsante
                     //due opzioni o la next parte dalla queue (rimettendo skipNext a true) o si fa partire in play() direttamente.
 
-/*
+*//*
                     LobbyService lobbyServiceSync = ServiceGenerator.createService(LobbyService.class);
                     Call<Lobby> callGetLobby = lobbyServiceSync.getLobbyById(lobby.getLobbyID());
                     try {
@@ -454,7 +472,7 @@ public class PartyHostActivity extends AppCompatActivity {
 
                                 }
                             });
-*/
+*//*
                 }
 
                 @Override
@@ -523,203 +541,4 @@ public class PartyHostActivity extends AppCompatActivity {
 
             return null;
         }
-    }
-
-    private void patchLobby(Lobby lobbyToPatch){
-        LobbyService lobbyService = RetrofitInstance.getRetrofitInstance().create(LobbyService.class);
-        Call<Lobby> callPatchLobby = lobbyService.patchLobby(lobbyToPatch.getLobbyID(), lobbyToPatch);
-        callPatchLobby.enqueue(new Callback<Lobby>() {
-            @Override
-            public void onResponse(Call<Lobby> call, Response<Lobby> response) {
-                Log.d("DEBUG_PATCH_DONE", "");
-            }
-            @Override
-            public void onFailure(Call<Lobby> call, Throwable t) {
-                Log.d("DEBUG_PATCH_FAIL", t+"");
-            }
-        });
-    }
-
-    private void play(Lobby lobby, String accessToken) {
-        PlayResumePlayback uri = new PlayResumePlayback();
-        String[] uris = {lobby.getCurrentMusicID()};
-        uri.setUris(uris);
-
-        Log.d("ARRAY CONSTRUCT", uris + "");
-        SpotifyAPIService spotifyAPIService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(SpotifyAPIService.class);
-        Call<JsonObject> responseCall = spotifyAPIService.playUserPlayback("Bearer " + accessToken, uri);
-        responseCall.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Log.d("DEBUG_PLAY", response.body() + "");
-                //Player Service
-                PlayerService playerService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(PlayerService.class);
-                Call<CurrentlyPlayingContext> callGetPlayer = playerService.getInfoCurrentUserPlayback("Bearer " + accessToken);
-                //Start AsyncTask
-                pollingPlaybackState = new PollingPlaybackState();
-                endVoteButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Thread setNextMusic = new Thread() {
-                            @Override
-                            public void run() {
-                                Log.d("TEST", "mi hai cliccato");
-                                lobby.setNextMusicID("spotify:track:6c2UkrZuNlLkZ7VyYcOw3V");
-                                patchLobby(lobby);
-                            }
-                        };
-                        setNextMusic.start();
-                    }
-                }); //endVote
-                pollingPlaybackState.execute(callGetPlayer);
-                //End Player Service
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d("DEBUG_PLAY_FAIL", t.toString() + "");
-            }
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-
-        pollingPlaybackState.cancel(true);
-        Intent intent = new Intent(this, UserLobbyActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-
-    }
-
-}
-
-
-
-
-
-
-
-/*
-    class PlayMusic extends AsyncTask<Lobby, Void, Void>{
-
-        @Override
-        protected Void doInBackground(Lobby... lobbies) {
-
-            Lobby lobby = lobbies[0];
-            assert lobby != null;
-            lobby.setCurrentMusicID(track.uri); //lobby.getDefaultMusicID() è usata per test perchè è una track corta
-            LocalTime temp = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                temp = LocalTime.now();
-            }
-            assert temp != null;
-            lobby.setMomentOfPlay(temp.toString());
-            lobby.setMusicDuration(track.duration);
-
-
-            LobbyService lobbyService = RetrofitInstance.getRetrofitInstance().create(LobbyService.class);
-            Call<Lobby> callPatchLobby = lobbyService.patchLobby(lobby.getLobbyID(),lobby);
-            callPatchLobby.enqueue(new Callback<Lobby>() {
-                @Override
-                public void onResponse(Call<Lobby> call, Response<Lobby> response) {
-
-                    //play music
-                    playMusic(response.body());
-
-
-
-                }
-
-                @Override
-                public void onFailure(Call<Lobby> call, Throwable t) {
-
-                }
-            });
-
-
-            return null;
-        }
-
-        private void playMusic(Lobby lobby){
-            ConnectionParams connectionParams =
-                    new ConnectionParams.Builder(CLIENT_ID)
-                            .setRedirectUri(REDIRECT_URI)
-                            .showAuthView(true)
-                            .build();
-
-            SpotifyAppRemote.connect(getApplicationContext(), connectionParams,
-                    new Connector.ConnectionListener() {
-
-                        @Override
-                        public void onConnected(SpotifyAppRemote spotifyAppRemote) {
-                            mSpotifyAppRemote = spotifyAppRemote;
-                            Log.d("DEBUG1", "Connected! Yay!");
-
-                            // Now you can start interacting with App Remote
-                            mSpotifyAppRemote.getPlayerApi().play(lobby.getCurrentMusicID());
-                           try {
-                                Thread.sleep(lobby.getMusicDuration());
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            lobby.setCurrentMusicID(lobby.getNextMusicID());
-                            lobby.setNextMusicID("spotify:track:5ygDXis42ncn6kYG14lEVG"); //track babyshark (la next va scelta per voto)
-                            SpotifyAPIService spotifyAPIService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(SpotifyAPIService.class);
-                            Call<Track> callGetTrack = spotifyAPIService.getTrackById(authorizationHeader, lobby.getCurrentMusicID().substring(14));
-                            Log.d("DEBUG_GETTRACK-IN_PM", authorizationHeader+" ---> "+lobby.getCurrentMusicID().substring(14));
-
-                            callGetTrack.enqueue(new Callback<Track>() {
-                                @Override
-                                public void onResponse(Call<Track> call, Response<Track> response) {
-
-                                    Log.d("call_GETTRACK-IN_PM", response.body().name);
-                                    lobby.setMusicDuration(response.body().duration);
-                                    LocalTime temp = null;
-                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                        temp = LocalTime.now();
-                                    }
-                                    assert temp != null;
-                                    lobby.setMomentOfPlay(temp.toString());
-
-                                    LobbyService lobbyService = RetrofitInstance.getRetrofitInstance().create(LobbyService.class);
-                                    Call<Lobby> patchLobby = lobbyService.patchLobby(lobby.getLobbyID(), lobby);
-                                    patchLobby.enqueue(new Callback<Lobby>() {
-                                        @Override
-                                        public void onResponse(Call<Lobby> call, Response<Lobby> response) {
-                                            PlayMusic playMusicAsync = new PlayMusic();
-                                            playMusicAsync.execute(response.body());
-                                            //playMusic(response.body());
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<Lobby> call, Throwable t) {
-
-                                        }
-                                    });
-                                }
-                                @Override
-                                public void onFailure(Call<Track> call, Throwable t) {
-
-                                }
-                            });
-
-
-                        }
-
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            Log.e("DEBUG2", throwable.getMessage(), throwable);
-
-                            // Something went wrong when attempting to connect! Handle errors here
-                        }
-                    });
-
-        }
-    }
-    */
-
-
-
+    }*/

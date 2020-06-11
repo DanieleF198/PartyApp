@@ -25,6 +25,9 @@ public interface SpotifyAPIService {
 
     @PUT("me/player/play")
     Call<JsonObject> playUserPlayback(@Header("Authorization") String accessToken, @Body PlayResumePlayback uri);
+/*
+    @PUT("me/player/play")
+    Call<JsonObject> playUserPlayback(@Header("Authorization") String accessToken, @Body PlayResumePlayback uri, long position_ms);*/
 
 }
 

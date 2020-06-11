@@ -16,6 +16,17 @@ public class Lobby implements Comparable< Lobby >, Serializable {
     private String nextMusicID;
     private long momentOfPlay;
     private long musicDuration;
+    private boolean isOpen;
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        isOpen = open;
+    }
+
+
 
     //getters and setters
 

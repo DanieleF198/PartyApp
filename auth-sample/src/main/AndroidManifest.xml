@@ -13,7 +13,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".activity.PartyHostActivity"></activity>
         <activity android:name=".activity.UserLobbyActivity" />
-        <activity android:name=".activity.PartyActivity" />
+        <activity android:name=".activity.ClientPartyActivity" />
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />

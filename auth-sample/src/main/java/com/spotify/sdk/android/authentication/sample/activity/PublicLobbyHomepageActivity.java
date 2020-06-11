@@ -41,7 +41,7 @@ public class PublicLobbyHomepageActivity extends AppCompatActivity {
 
     private List<Lobby> lobbyList;
     private Intent intent;
-    private Gson gson; //QUACK
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +127,8 @@ public class PublicLobbyHomepageActivity extends AppCompatActivity {
             @Override
             public void onItemClick(Lobby lobby) {
                 // Toast.makeText(getContext(), "Item Clicked : "+risultato.getId(), Toast.LENGTH_LONG).show();
-                intent = new Intent(getApplication(), PartyActivity.class);
+                intent = new Intent(getApplication(), ClientPartyActivity.class);
+                intent.putExtra("CLIENT_LOBBY", lobby);
                 startActivity(intent);
             }
         });

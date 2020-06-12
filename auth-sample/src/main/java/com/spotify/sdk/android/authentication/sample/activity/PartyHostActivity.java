@@ -323,7 +323,7 @@ public class PartyHostActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 Log.d("TEST", "mi hai cliccato");
-                                lobby.setNextMusicID("spotify:track:6c2UkrZuNlLkZ7VyYcOw3V");
+                                lobby.setNextMusicID("spotify:track:0jSS8qyuv7DdkAaGSmmHv5");
                                 patchLobby(lobby);
                             }
                         };

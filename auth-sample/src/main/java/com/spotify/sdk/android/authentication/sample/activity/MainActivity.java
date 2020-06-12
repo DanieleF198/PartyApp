@@ -83,16 +83,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
 
 
-
-
-
-
-
-
-
-
-
-
         gotoLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void connected() {
         // Then we will write some more code here.
-        //mSpotifyAppRemote.getPlayerApi().play("spotify:track:3albRz1vGpxGo5xSnGirhk");
+        mSpotifyAppRemote.getPlayerApi().play("spotify:track:3albRz1vGpxGo5xSnGirhk");
     }
 
     @Override

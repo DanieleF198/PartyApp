@@ -378,7 +378,7 @@ public class PartyHostActivity extends AppCompatActivity {
                 });
 
                 try {
-                    Thread.sleep(300);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -432,18 +432,20 @@ public class PartyHostActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call<Track> call, Response<Track> response) {
-                textTrackName.setText(response.body().name);
-                Log.d("NAME", response.body()+"");
-                Log.d("URI", uriOfTrack+"");
-                Thread setNextMusic = new Thread() {
-                    @Override
-                    public void run() {
-                        Log.d("TEST", "mi hai cliccato");
-                        lobby.setNextMusicID("spotify:track:"+uriOfTrack);
-                        patchLobby(lobby);
-                    }
-                };
-                setNextMusic.start();
+                if(response.body() != null) {
+                    textTrackName.setText(response.body().name);
+                    Log.d("NAME", response.body() + "");
+                    Log.d("URI", uriOfTrack + "");
+                    Thread setNextMusic = new Thread() {
+                        @Override
+                        public void run() {
+                            Log.d("TEST", "mi hai cliccato");
+                            lobby.setNextMusicID("spotify:track:" + uriOfTrack);
+                            patchLobby(lobby);
+                        }
+                    };
+                    setNextMusic.start();
+                }
             }
 
             @Override

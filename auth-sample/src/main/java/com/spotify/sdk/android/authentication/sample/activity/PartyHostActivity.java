@@ -71,6 +71,7 @@ public class PartyHostActivity extends AppCompatActivity {
     private Paging tracks;
     private Random random;
     private String uriOfTrack;
+    private SpotifyAPIService spotifyAPIService;
 
 
 
@@ -114,7 +115,6 @@ public class PartyHostActivity extends AppCompatActivity {
 
                     @Override
                     public void onConnected(SpotifyAppRemote spotifyAppRemote) {
-
 
                         openPartyButton.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -330,7 +330,7 @@ public class PartyHostActivity extends AppCompatActivity {
         uri.setUris(uris);
 
         Log.d("ARRAY CONSTRUCT", uris + "");
-        SpotifyAPIService spotifyAPIService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(SpotifyAPIService.class);
+        spotifyAPIService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(SpotifyAPIService.class);
         Call<JsonObject> responseCall = spotifyAPIService.playUserPlayback("Bearer " + accessToken, uri);
         responseCall.enqueue(new Callback<JsonObject>() {
             @Override
@@ -459,6 +459,21 @@ public class PartyHostActivity extends AppCompatActivity {
     public void onBackPressed() {
         LobbyService lobbyService = RetrofitInstance.getRetrofitInstance().create(LobbyService.class);
         lobbySerialized = (Lobby) getIntent().getSerializableExtra("HOST_LOBBY");
+
+        spotifyAPIService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(SpotifyAPIService.class);
+        Call<JsonObject> callPauseUserPlayback = spotifyAPIService.pauseUserPlayback("Bearer " + accessToken);
+        callPauseUserPlayback.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Log.d("Player paused: ",response.code()+"");
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.d("Player paused: ",t.getMessage()+"");
+            }
+        });
+
         Call<Lobby> callLobbyById = lobbyService.getLobbyById(lobbySerialized.getLobbyID());
         callLobbyById.enqueue(new Callback<Lobby>() {
             @Override
@@ -488,7 +503,8 @@ public class PartyHostActivity extends AppCompatActivity {
                 Log.d("DEBUG_ONBACK_FAIL", t.toString()+"");
             }
         });
-        pollingPlaybackState.cancel(true);
+        if(pollingPlaybackState != null)
+            pollingPlaybackState.cancel(true);
         Intent intent = new Intent(this, UserLobbyActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);

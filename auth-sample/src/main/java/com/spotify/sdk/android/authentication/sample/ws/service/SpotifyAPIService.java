@@ -32,6 +32,9 @@ public interface SpotifyAPIService {
     @PUT("me/player/play")
     Call<JsonObject> playUserPlayback(@Header("Authorization") String accessToken, @Body PlayResumePlayback uri);
 
+    @PUT("me/player/pause")
+    Call<JsonObject> pauseUserPlayback(@Header("Authorization") String accessToken);
+
     @GET("playlists/{playlist_id}")
     Call<Playlist> getPlaylistTracks(@Header ("Authorization") String accessToken, @Path("playlist_id") String playlist_id);
 /*

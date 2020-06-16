@@ -12,11 +12,15 @@ public class Lobby implements Comparable< Lobby >, Serializable {
     private int partecipantNumber;
     //there should be more attributes(?), but i don't exactly know wiches (maybe image of the lobby? the owner of the lobby?); so for now i don't touch them
     private String defaultMusicID;
+    private String playlistLobby;
     private String currentMusicID;
     private String nextMusicID;
     private long momentOfPlay;
     private long musicDuration;
     private boolean isOpen;
+    private boolean isAccepted;
+
+//getters and setters
 
     public boolean isOpen() {
         return isOpen;
@@ -26,10 +30,17 @@ public class Lobby implements Comparable< Lobby >, Serializable {
         isOpen = open;
     }
 
+    public boolean isAccepted() { return isAccepted; }
 
+    public void setAccepted(boolean accepted) { isAccepted = accepted; }
 
-    //getters and setters
+    public String getPlaylistLobby() {
+        return playlistLobby;
+    }
 
+    public void setPlaylistLobby(String playlistLobby) {
+        this.playlistLobby = playlistLobby;
+    }
 
     public long getMusicDuration() {
         return musicDuration;

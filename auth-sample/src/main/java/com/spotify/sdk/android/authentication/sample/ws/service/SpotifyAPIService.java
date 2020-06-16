@@ -3,10 +3,16 @@ package com.spotify.sdk.android.authentication.sample.ws.service;
 
 
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.spotify.protocol.types.Track;
 import com.spotify.sdk.android.authentication.sample.ws.model.PlayResumePlayback;
+import com.spotify.sdk.android.authentication.sample.ws.model.Playlist;
 
+
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -25,6 +31,9 @@ public interface SpotifyAPIService {
 
     @PUT("me/player/play")
     Call<JsonObject> playUserPlayback(@Header("Authorization") String accessToken, @Body PlayResumePlayback uri);
+
+    @GET("playlists/{playlist_id}")
+    Call<Playlist> getPlaylistTracks(@Header ("Authorization") String accessToken, @Path("playlist_id") String playlist_id);
 /*
     @PUT("me/player/play")
     Call<JsonObject> playUserPlayback(@Header("Authorization") String accessToken, @Body PlayResumePlayback uri, long position_ms);*/

@@ -207,7 +207,7 @@ public class PartyHostActivity extends AppCompatActivity {
         }
     }
 
-    class PollingPlaybackState extends AsyncTask<Call<CurrentlyPlayingContext>, Lobby, Void>{
+    class PollingPlaybackState extends AsyncTask<Call<CurrentlyPlayingContext>, Lobby, Void> {
 
 
         @Override
@@ -218,8 +218,6 @@ public class PartyHostActivity extends AppCompatActivity {
             CurrentlyPlayingContext currentlyPlayingContextTemp;
             CurrentlyPlayingContext currentlyPlayingContext;
             int durationTrack;
-
-
 
 
             try {
@@ -503,6 +501,7 @@ public class PartyHostActivity extends AppCompatActivity {
                 Log.d("DEBUG_ONBACK_FAIL", t.toString()+"");
             }
         });
+
         if(pollingPlaybackState != null)
             pollingPlaybackState.cancel(true);
         Intent intent = new Intent(this, UserLobbyActivity.class);
@@ -510,165 +509,3 @@ public class PartyHostActivity extends AppCompatActivity {
         startActivity(intent);
     }
 }
-
-
-
-
-
-    /*class PlayMusic extends AsyncTask<Lobby, Void, Void> {
-
-
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        @Override
-        protected Void doInBackground(Lobby... params) {
-
-            Lobby lobby = (Lobby) params[0];
-            assert lobby != null;
-            lobby.setCurrentMusicID(track.uri); //lobby.getDefaultMusicID() è usata per test perchè è una track corta
-            LocalTime time = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                time = LocalTime.now();
-            }
-            assert time != null;
-            lobby.setMomentOfPlay(time.getLong(ChronoField.HOUR_OF_DAY)+time.getLong(ChronoField.MINUTE_OF_DAY)+time.getLong(ChronoField.SECOND_OF_DAY)+time.getLong(ChronoField.MILLI_OF_DAY));
-            lobby.setMusicDuration(track.duration);
-
-
-            LobbyService lobbyService = RetrofitInstance.getRetrofitInstance().create(LobbyService.class);
-            Call<Lobby> callPatchLobby = lobbyService.patchLobby(lobby.getLobbyID(), lobby);
-            callPatchLobby.enqueue(new Callback<Lobby>() {
-                @Override
-                public void onResponse(Call<Lobby> call, Response<Lobby> response) {
-
-                    //play music
-                    play(response.body());
-
-                    *//*endVoteButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            Thread setNextMusic = new Thread() {
-                                @Override
-                                public void run() {
-
-                                    lobby.setNextMusicID("spotify:track:6c2UkrZuNlLkZ7VyYcOw3V");
-
-                                    patchLobby(lobby);
-
-                                }
-                            };
-
-                            setNextMusic.start();
-                        }
-                    }); //endVote*//*
-
-                    DisableSkipNext disableSkipNext = new DisableSkipNext();
-                    disableSkipNext.execute();
-
-                    //siamo in riproduzione
-                    //va disattivato skipNext
-                    //come finisce la musica in riproduzione si ferma
-                    //decide l'host quando far partire la nextMusic con un pulsante
-                    //due opzioni o la next parte dalla queue (rimettendo skipNext a true) o si fa partire in play() direttamente.
-
-*//*
-                    LobbyService lobbyServiceSync = ServiceGenerator.createService(LobbyService.class);
-                    Call<Lobby> callGetLobby = lobbyServiceSync.getLobbyById(lobby.getLobbyID());
-                    try {
-                        Lobby tempLobby = null;
-                         tempLobby = callGetLobby.execute().body();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //Log.d("DEBUG_tempLobby", tempLobby.getDefaultMusicID());
-
-                    SpotifyAppRemote.connect(getApplicationContext(), connectionParams,
-                            new Connector.ConnectionListener() {
-
-                                @Override
-                                public void onConnected(SpotifyAppRemote spotifyAppRemote) {
-                                    mSpotifyAppRemote = spotifyAppRemote;
-                                    Log.d("DEBUG1", "Connected! Yay!");
-
-
-                                    // Now you can start interacting with App Remote
-
-                                        CallResult<Empty> playerStateCallResult = mSpotifyAppRemote.getPlayerApi().queue(lobby.getNextMusicID());
-
-                                }
-
-                                @Override
-                                public void onFailure(Throwable throwable) {
-
-                                }
-                            });
-*//*
-                }
-
-                @Override
-                public void onFailure(Call<Lobby> call, Throwable t) {}
-            });
-
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            Log.d("ONPOSTEXECUTE", "FINISHED MUSIC");
-        }
-
-        private void play(Lobby lobby){
-
-            SpotifyAppRemote.connect(getApplicationContext(), connectionParams,
-                    new Connector.ConnectionListener() {
-
-                        @Override
-                        public void onConnected(SpotifyAppRemote spotifyAppRemote) {
-                            mSpotifyAppRemote = spotifyAppRemote;
-                            Log.d("DEBUG1", "Connected! Yay!");
-
-                            // Now you can start interacting with App Remote
-                            mSpotifyAppRemote.getPlayerApi().play(lobby.getCurrentMusicID());
-                        }
-
-                        @Override
-                        public void onFailure(Throwable throwable) {
-
-                        }
-                    });
-
-        }
-    }
-
-
-    class DisableSkipNext extends AsyncTask<Void,Void,Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            SpotifyAppRemote.connect(getApplicationContext(), connectionParams,
-                    new Connector.ConnectionListener() {
-                        @Override
-                        public void onConnected(SpotifyAppRemote spotifyAppRemote) {
-
-                            CallResult<PlayerState> playerStateCall = spotifyAppRemote.getPlayerApi().getPlayerState();
-                            Result<PlayerState> playerStateResult = playerStateCall.await(40, TimeUnit.SECONDS);
-                            if (playerStateResult.isSuccessful()) {
-                                PlayerState playerState = playerStateResult.getData();
-                                // have some fun with playerState
-                            } else {
-                                Throwable error = playerStateResult.getError();
-                                // try to have some fun with the error
-                            }
-
-                        }
-
-                        @Override
-                        public void onFailure(Throwable throwable) {
-
-                        }
-                    });
-
-            return null;
-        }
-    }*/

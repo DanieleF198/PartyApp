@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +31,7 @@ import com.spotify.sdk.android.authentication.sample.ws.service.LobbyService;
 import com.spotify.sdk.android.authentication.sample.ws.service.PlayerService;
 import com.spotify.sdk.android.authentication.sample.ws.service.SpotifyAPIService;
 
+import java.io.IOException;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
 
@@ -56,9 +58,9 @@ public class ClientPartyActivity extends AppCompatActivity {
     private Button endVoteButton;
     private static final int REQUEST_CODE = 1337;
     private String accessToken;
-    private PartyHostActivity.PollingPlaybackState pollingPlaybackState;
     private long clientDelta;
     private LocalTime temp;
+    private PollingCurrentMusic pollingCurrentMusic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +116,11 @@ public class ClientPartyActivity extends AppCompatActivity {
                                             Toast.makeText(ClientPartyActivity.this, "Il party è chiuso", Toast.LENGTH_SHORT).show();
                                         }
                                         else {
-                                            play(lobby, accessToken);
+                                            try {
+                                                play(lobby, accessToken);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
                                         }
                                         //1- il client controlla che "isOpen" sia true
                                         //  1a- il client si dovrà sincronizzare con l'host e far partire la musica se current music è diverso da null,
@@ -170,38 +176,62 @@ public class ClientPartyActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void play(Lobby lobby, String accessToken) {
-        PlayResumePlayback uri = new PlayResumePlayback();
-        String[] uris = {lobby.getCurrentMusicID()};
-        uri.setUris(uris);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            temp = LocalTime.now();
-        }
-        assert temp != null;
-        clientDelta = (temp.getLong(ChronoField.MILLI_OF_DAY));
-        Log.d("DEBUG_MOMENT1", lobby.getMomentOfPlay()+"");
-        Log.d("DEBUG_MOMENT2", clientDelta+"");
+    private void play(Lobby lobby, String accessToken) throws IOException {
 
-        clientDelta = clientDelta - lobby.getMomentOfPlay();
+        LobbyService lobbyService = RetrofitInstance.getRetrofitInstance().create(LobbyService.class);
+        Call<Lobby> lobbyCall = lobbyService.getLobbyById(lobby.getLobbyID());
+        //lobby = lobbyCall.execute().body();
 
-        uri.setPosition_ms(clientDelta);
-        Log.d("DEBUG_DELAY", clientDelta+"");
 
-        Log.d("ARRAY CONSTRUCT", uris + "");
-        SpotifyAPIService spotifyAPIService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(SpotifyAPIService.class);
-        Call<JsonObject> responseCall = spotifyAPIService.playUserPlayback("Bearer " + accessToken, uri);
-        responseCall.enqueue(new Callback<JsonObject>() {
+        lobbyCall.enqueue(new Callback<Lobby>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Log.d("DEBUG_PLAY", response.body() + "");
+            public void onResponse(Call<Lobby> call, Response<Lobby> response) {
+
+                Lobby lobbyResp = response.body();
+                PlayResumePlayback uri = new PlayResumePlayback();
+                String[] uris = {lobbyResp.getCurrentMusicID()};
+                uri.setUris(uris);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    temp = LocalTime.now();
+                }
+                assert temp != null;
+                clientDelta = (temp.getLong(ChronoField.MILLI_OF_DAY));
+                Log.d("DEBUG_MOMENT1", lobbyResp.getMomentOfPlay()+"");
+                Log.d("DEBUG_MOMENT2", clientDelta+"");
+
+                clientDelta = clientDelta - lobbyResp.getMomentOfPlay();
+
+                uri.setPosition_ms(clientDelta);
+                Log.d("DEBUG_DELAY", clientDelta+"");
+
+                Log.d("ARRAY CONSTRUCT", uris + "");
+                SpotifyAPIService spotifyAPIService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(SpotifyAPIService.class);
+                Call<JsonObject> responseCall = spotifyAPIService.playUserPlayback("Bearer " + accessToken, uri);
+                responseCall.enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        Log.d("DEBUG_PLAY", response.body() + "");
+
+                        Call<Lobby> lobbyCallParam = lobbyService.getLobbyById(lobbyResp.getLobbyID());
+                        pollingCurrentMusic = new PollingCurrentMusic();
+                        pollingCurrentMusic.execute(lobbyCallParam);
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        Log.d("DEBUG_PLAY_FAIL", t.toString() + "");
+                    }
+                });
 
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d("DEBUG_PLAY_FAIL", t.toString() + "");
+            public void onFailure(Call<Lobby> call, Throwable t) {
+
             }
         });
+
+
     }
 
     @Override
@@ -222,8 +252,80 @@ public class ClientPartyActivity extends AppCompatActivity {
             }
         });
 
+        if(pollingCurrentMusic != null)
+            pollingCurrentMusic.cancel(true);
         Intent intent = new Intent(this, PublicLobbyHomepageActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+    }
+
+    class PollingCurrentMusic extends AsyncTask<Call<Lobby>, Void, Lobby> {
+
+
+        @Override
+        protected Lobby doInBackground(Call<Lobby>... param) {
+
+            Call<Lobby> call = param[0];
+            Call<Lobby> newCall;
+            Lobby lobby = new Lobby();
+            Lobby lobbyTemp;
+            String currentMusicId;
+
+            try {
+                lobby = call.execute().body();
+                currentMusicId = lobby.getCurrentMusicID();
+
+                do {
+                    if(isCancelled())
+                        break;
+                    newCall = call.clone();
+                    lobbyTemp = newCall.execute().body();
+                    if (newCall.isExecuted())
+                        newCall.cancel();
+                    Log.d("CLIENT_POLLING", lobbyTemp.getCurrentMusicID());
+                } while(lobbyTemp.getCurrentMusicID().equals(lobby.getCurrentMusicID()) && lobbyTemp.isOpen());
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return lobby;
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        protected void onPostExecute(Lobby lobby) {
+            Log.d("DEBUG_CLIENTPOLLING", "music changed");
+
+            try {
+                if(lobby.isOpen())
+                    play(lobby, accessToken);
+                else
+                    pause();
+
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void pause(){
+        SpotifyAPIService spotifyAPIService;
+        spotifyAPIService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(SpotifyAPIService.class);
+        Call<JsonObject> callPauseUserPlayback = spotifyAPIService.pauseUserPlayback("Bearer " + accessToken);
+        callPauseUserPlayback.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Log.d("Player paused: ",response.code()+"");
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.d("Player paused: ",t.getMessage()+"");
+            }
+        });
     }
 }

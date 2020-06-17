@@ -1,6 +1,7 @@
 package com.spotify.sdk.android.authentication.sample.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -15,6 +16,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.spotify.sdk.android.authentication.sample.R;
 import com.spotify.sdk.android.authentication.sample.ws.retrofit.RetrofitInstance;
@@ -40,8 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        EditText username = findViewById(R.id.username);
-        EditText password = findViewById(R.id.password);
+        TextInputEditText username = findViewById(R.id.usernameEditText);
+        TextInputEditText password = findViewById(R.id.passwordEditText);
         Button loginButton = findViewById(R.id.loginButton);
         TextView errorView = findViewById(R.id.errorView);
 

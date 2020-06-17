@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".activity.LoginActivity">
 
-
     <ImageView
         android:id="@+id/loginTopLayout"
         android:layout_width="0dp"
@@ -38,24 +37,47 @@
         android:scaleType="centerCrop"/>
 
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/username"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="280dp"
+        android:hint="Username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/UsernameInputLayoutStyle"
+        app:boxStrokeColor="@drawable/username_input_boxstroke_layout"
+        app:hintTextColor="@drawable/username_input_colorhint_layout">
 
-    <EditText
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/usernameEditText"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/password"
-        android:layout_width="300dp"
+        style="@style/PaaswordInputLayoutStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="@+id/loginTopLayout"
+        android:layout_marginTop="24dp"
+        android:hint="Password"
+        app:boxStrokeColor="@drawable/password_input_boxstroke_layout"
+        app:hintTextColor="@drawable/password_input_colorhint_layout"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
+        app:layout_constraintTop_toBottomOf="@+id/username">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <Button
         android:id="@+id/loginButton"

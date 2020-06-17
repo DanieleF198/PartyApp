@@ -122,13 +122,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //Options menu
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
         getMenuInflater().inflate(R.menu.main_menu,menu);
         return true;
-    }
+    }*/
 
     public void test(){
         CallResult<PlayerState> callTrack =  mSpotifyAppRemote.getPlayerApi().getPlayerState();

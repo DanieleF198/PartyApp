@@ -74,10 +74,16 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    repositories {
-        mavenCentral()
-        flatDir {
-            dirs 'libs'
+    allprojects {
+        repositories {
+            jcenter()
+            maven {
+                url "https://maven.google.com"
+            }
+            mavenCentral()
+            flatDir {
+                dirs 'libs'
+            }
         }
     }
 }

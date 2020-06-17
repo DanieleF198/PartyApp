@@ -153,4 +153,5 @@ public class LoginActivity extends AppCompatActivity {
     private void startAct(Intent intent){
         startActivity(intent);
     }
+
 }

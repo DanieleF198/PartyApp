@@ -230,8 +230,6 @@ public class ClientPartyActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     @Override

@@ -26,12 +26,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.gson.Gson;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
@@ -59,13 +63,20 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private Track track;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        BottomAppBar bottomAppBar = (BottomAppBar) findViewById(R.id.bottom_app_bar);
+        setSupportActionBar(bottomAppBar);
+
+        bottomAppBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("DEBUG_LEFT_MENU", view+"");
+            }
+        });
 
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
@@ -81,6 +92,16 @@ public class MainActivity extends AppCompatActivity {
         Button gotoLoginButton = findViewById(R.id.gotologin);
         mToolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolbar);
+
+        /*Menu menu = findViewById(R.id.bar_menu);
+        MenuItem logout = menu.getItem(R.id.logout);
+        logout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Toast.makeText(MainActivity.this, "LOGOUT", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });*/
 
 
         gotoLoginButton.setOnClickListener(new View.OnClickListener() {
@@ -181,5 +202,46 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         // Aaand we will finish off here.
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater= getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        Log.d("DEBUG_MENU", menu.toString()+"");
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Log.d("ITEM_PRESSED",item.getItemId()+"");
+        switch (item.getItemId()){
+            case R.id.logout:
+                Log.d("LOGOUT_PRESSED_MENU","logout pressed");
+                Intent intentToLoginActivity = new Intent(this, LoginActivity.class );
+                Gson gson = new Gson();
+                UserRemember userRemember = new UserRemember("", "","", false);
+                String json = gson.toJson(userRemember);
+                try (FileOutputStream fos = getApplicationContext().openFileOutput("remember.json", Context.MODE_PRIVATE)) {
+                    fos.write(json.getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                startActivity(intentToLoginActivity);
+                return true;
+
+            case R.id.myLobbies:
+                Log.d("SETTINGS_PRESSED_MENU","setting_pressed");
+                return true;
+                /*
+            case R.id.myLobbies:
+                Toast.makeText(this, "myLobby clicked", Toast.LENGTH_SHORT).show();
+                Log.d("DEBUG_MENU ", "LOBBY");
+                return true; */
+            default:
+                Log.d("DEBUG_MENU", "default");
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

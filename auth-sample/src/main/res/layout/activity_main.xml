@@ -31,7 +31,7 @@
 
 
     <include
-        android:id="@+id/include"
+        android:id="@+id/includeAppBar"
         layout="@layout/appbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -39,40 +39,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <Button
-        android:id="@+id/gotomylobbys"
-        android:layout_width="160dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginBottom="50dp"
-        android:text="Vai alle tue Lobby"
-        app:layout_constraintBottom_toTopOf="@+id/gotologin"
-        app:layout_constraintEnd_toStartOf="@+id/gotoLists"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/gotologin"
-        android:layout_width="300dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="150dp"
-        android:text="LOGOUT"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/gotoLists"
-        android:layout_width="160dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginBottom="50dp"
-        android:text="vai alle lobby pubbliche"
-        app:layout_constraintBottom_toTopOf="@+id/gotologin"
-        app:layout_constraintEnd_toEndOf="parent" />
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="56dp"
+        app:layout_constraintBottom_toBottomOf="@+id/includeBottomAppBar"
+        app:layout_constraintTop_toBottomOf="@+id/includeAppBar" />
 
     <include
-        android:id="@+id/include"
+        android:id="@+id/includeBottomAppBar"
         layout="@layout/bottom_appbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

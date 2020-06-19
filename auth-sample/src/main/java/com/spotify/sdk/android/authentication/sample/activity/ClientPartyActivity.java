@@ -252,7 +252,7 @@ public class ClientPartyActivity extends AppCompatActivity {
 
         if(pollingCurrentMusic != null)
             pollingCurrentMusic.cancel(true);
-        Intent intent = new Intent(this, PublicLobbyHomepageActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }

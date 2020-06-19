@@ -124,50 +124,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d("PACKAGE_NAME", getApplicationContext().getPackageName()+"");
         Log.d("DEBUG_BUNDLE: ",bundle+"");
 
-/*        Intent intentToLoginActivity = new Intent(this, LoginActivity.class );*/
-
-
-        /*Button gotoLoginButton = findViewById(R.id.gotologin);
-        mToolbar = findViewById(R.id.main_toolbar);
-        setSupportActionBar(mToolbar);
-
-
-        gotoLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Gson gson = new Gson();
-                UserRemember userRemember = new UserRemember("", "","", false);
-                String json = gson.toJson(userRemember);
-                try (FileOutputStream fos = getApplicationContext().openFileOutput("remember.json", Context.MODE_PRIVATE)) {
-                    fos.write(json.getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                startActivity(intentToLoginActivity);
-            }
-        });
-
-        Button gotoUserLobbyListButton = findViewById(R.id.gotomylobbys);
-
-        gotoUserLobbyListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent2 = new Intent(MainActivity.this,UserLobbyActivity.class);
-                view.getContext().startActivity(intent2);
-            }
-        });
-
-        Button gotoListsButton = findViewById(R.id.gotoLists);
-
-        gotoListsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,PublicLobbyHomepageActivity.class);
-                view.getContext().startActivity(intent);
-            }
-        });
-*/
         LobbyService lobbyService = RetrofitInstance.getRetrofitInstance().create(LobbyService.class);
 
         Call<List<Lobby>> call = lobbyService.getLobbys();
@@ -358,17 +314,34 @@ public class MainActivity extends AppCompatActivity {
         Log.d("ITEM_PRESSED",item.getItemId()+"");
         switch (item.getItemId()){
             case R.id.logout:
-                Log.d("LOGOUT_PRESSED_MENU","logout pressed");
-                Intent intentToLoginActivity = new Intent(this, LoginActivity.class );
-                Gson gson = new Gson();
-                UserRemember userRemember = new UserRemember("", "","", false);
-                String json = gson.toJson(userRemember);
-                try (FileOutputStream fos = getApplicationContext().openFileOutput("remember.json", Context.MODE_PRIVATE)) {
-                    fos.write(json.getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                startActivity(intentToLoginActivity);
+                Context context = MainActivity.this;
+                new AlertDialog.Builder(context)
+                        .setTitle("Logout")
+                        .setMessage("Sei sicuro di voler effettuare il logout?")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.d("LOGOUT_PRESSED_MENU","logout pressed");
+
+                                Intent intentToLoginActivity = new Intent(getApplicationContext(), LoginActivity.class );
+                                Gson gson = new Gson();
+                                UserRemember userRemember = new UserRemember("", "","", false);
+                                String json = gson.toJson(userRemember);
+                                try (FileOutputStream fos = getApplicationContext().openFileOutput("remember.json", Context.MODE_PRIVATE)) {
+                                    fos.write(json.getBytes());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                startActivity(intentToLoginActivity);
+                            }
+                        })
+
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
                 return true;
 
             case R.id.myLobbies:
@@ -400,11 +373,7 @@ public class MainActivity extends AppCompatActivity {
                 currentFrag = selectedFragment2;
 
                 return true;
-                /*
-            case R.id.myLobbies:
-                Toast.makeText(this, "myLobby clicked", Toast.LENGTH_SHORT).show();
-                Log.d("DEBUG_MENU ", "LOBBY");
-                return true; */
+                
             default:
                 Log.d("DEBUG_MENU", "default");
                 return super.onOptionsItemSelected(item);

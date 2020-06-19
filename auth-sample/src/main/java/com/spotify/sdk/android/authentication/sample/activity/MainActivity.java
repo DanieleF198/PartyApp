@@ -373,7 +373,7 @@ public class MainActivity extends AppCompatActivity {
                 currentFrag = selectedFragment2;
 
                 return true;
-                
+
             default:
                 Log.d("DEBUG_MENU", "default");
                 return super.onOptionsItemSelected(item);

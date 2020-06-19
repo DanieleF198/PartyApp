@@ -77,7 +77,7 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.ViewHolder>{
                     return;
                 }
                 mhostUser = response.body();
-                holder.textView4.setText(mhostUser.getUsername());
+                /*holder.textView4.setText(mhostUser.getUsername());*/
             }
 
             @Override
@@ -99,14 +99,13 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.ViewHolder>{
         public TextView textView1;
         public TextView textView2;
         public TextView textView3;
-        public TextView textView4;
+        /*public TextView textView4;*/
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textView1 = itemView.findViewById(R.id.lobbyRowName);
             textView2 = itemView.findViewById(R.id.genreOrMoodRow);
             textView3 = itemView.findViewById(R.id.partecipantNumberRow);
-            textView4 = itemView.findViewById(R.id.hostID);
         }
 
         public void bind(final Lobby lobby, final LobbyAdapter.OnItemClickListener listener) {

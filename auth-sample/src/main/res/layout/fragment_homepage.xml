@@ -5,11 +5,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activity.PublicLobbyHomepageActivity">
 
+    <TextView
+        android:id="@+id/TitleLobbyPubbliche"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="@color/black"
+        android:textSize="17dp"
+        android:textStyle="bold"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="Entra in un Party e goditi la musica!"
+        />
+
+    <ImageView
+        android:id="@+id/bordo"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/TitleLobbyPubbliche"
+        android:src="@mipmap/bordo"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewLobby"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
+        android:layout_below="@+id/bordo"
         />
 
 </RelativeLayout>

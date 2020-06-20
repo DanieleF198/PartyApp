@@ -335,6 +335,7 @@ public class PartyHostActivity extends AppCompatActivity {
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Log.d("DEBUG_PLAY", response.body() + "");
                 Log.d("DEBUG_SYNCH", "sono nell'onResponse di play");
+
                 //Player Service
                 PlayerService playerService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(PlayerService.class);
                 Call<CurrentlyPlayingContext> callGetPlayer = playerService.getInfoCurrentUserPlayback("Bearer " + accessToken);

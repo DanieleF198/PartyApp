@@ -9,8 +9,10 @@
 
             <gradient
                 android:angle="45"
-                android:endColor="#D425B5"
-                android:startColor="#EBF928" />
+                android:startColor="#FFDF38F0"
+                android:centerColor="#FF4C9BC4"
+                android:endColor="#FF00CEAE"
+                 />
 
         </shape>
     </item>
@@ -21,6 +23,6 @@
         android:top="5dp">
         <bitmap
             android:gravity="center"
-            android:src="@drawable/icons8_casa_24" />
+            android:src="@drawable/home" />
     </item>
 </layer-list>

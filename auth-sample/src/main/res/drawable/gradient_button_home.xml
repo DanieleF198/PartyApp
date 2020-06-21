@@ -23,6 +23,6 @@
         android:top="5dp">
         <bitmap
             android:gravity="center"
-            android:src="@drawable/home" />
+            android:src="@drawable/p_bianca24" />
     </item>
 </layer-list>

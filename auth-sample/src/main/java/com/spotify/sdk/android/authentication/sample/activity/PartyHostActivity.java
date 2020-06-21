@@ -3,6 +3,7 @@ package com.spotify.sdk.android.authentication.sample.activity;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -11,7 +12,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.spotify.android.appremote.api.ConnectionParams;
@@ -22,7 +25,10 @@ import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
 import com.spotify.sdk.android.authentication.sample.R;
+import com.spotify.sdk.android.authentication.sample.ws.model.Album;
+import com.spotify.sdk.android.authentication.sample.ws.model.Artist;
 import com.spotify.sdk.android.authentication.sample.ws.model.CurrentlyPlayingContext;
+import com.spotify.sdk.android.authentication.sample.ws.model.Image;
 import com.spotify.sdk.android.authentication.sample.ws.model.Paging;
 import com.spotify.sdk.android.authentication.sample.ws.model.PlayResumePlayback;
 import com.spotify.sdk.android.authentication.sample.ws.model.Playlist;
@@ -32,6 +38,7 @@ import com.spotify.sdk.android.authentication.sample.ws.model.Lobby;
 import com.spotify.sdk.android.authentication.sample.ws.service.LobbyService;
 import com.spotify.sdk.android.authentication.sample.ws.service.PlayerService;
 import com.spotify.sdk.android.authentication.sample.ws.service.SpotifyAPIService;
+import com.squareup.picasso.Picasso;
 
 
 import java.io.IOException;
@@ -64,6 +71,7 @@ public class PartyHostActivity extends AppCompatActivity {
     private ConnectionParams connectionParams;
     private Button endVoteButton;
     private Button declineButton;
+    private ConstraintLayout constraintLayoutCardView;
     private TextView textTrackName;
     private static final int REQUEST_CODE = 1337;
     private String accessToken;
@@ -72,6 +80,7 @@ public class PartyHostActivity extends AppCompatActivity {
     private Random random;
     private String uriOfTrack;
     private SpotifyAPIService spotifyAPIService;
+    private com.spotify.sdk.android.authentication.sample.ws.model.Album albumCurrentTrack;
 
 
 
@@ -80,6 +89,14 @@ public class PartyHostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_party_host);
 
+        Button openPartyButton = findViewById(R.id.openParty);
+        lobbySerialized = (Lobby) getIntent().getSerializableExtra("HOST_LOBBY");
+        if (!lobbySerialized.isOpen()){
+            openPartyButton.setText("Apri il Party");
+        }
+        else{
+            openPartyButton.setText("Chiudi il Party");
+        }
 
     }
 
@@ -92,6 +109,7 @@ public class PartyHostActivity extends AppCompatActivity {
         endVoteButton = findViewById(R.id.endVote);
         declineButton = findViewById(R.id.decline);
         textTrackName = findViewById(R.id.trackName);
+        constraintLayoutCardView = findViewById(R.id.cardView);
         random = new Random();
 
 
@@ -116,56 +134,70 @@ public class PartyHostActivity extends AppCompatActivity {
                     @Override
                     public void onConnected(SpotifyAppRemote spotifyAppRemote) {
 
-                        openPartyButton.setOnClickListener(new View.OnClickListener() {
+                        LobbyService lobbyService = RetrofitInstance.getRetrofitInstance().create(LobbyService.class);
+                        lobbySerialized = (Lobby) getIntent().getSerializableExtra("HOST_LOBBY");
+                        Call<Lobby> callLobbyById = lobbyService.getLobbyById(lobbySerialized.getLobbyID());
+                        callLobbyById.enqueue(new Callback<Lobby>() {
                             @Override
-                            public void onClick(View v) {
-
-                                LobbyService lobbyService = RetrofitInstance.getRetrofitInstance().create(LobbyService.class);
-                                        lobbySerialized = (Lobby) getIntent().getSerializableExtra("HOST_LOBBY");
-                                        Call<Lobby> callLobbyById = lobbyService.getLobbyById(lobbySerialized.getLobbyID());
-                                        callLobbyById.enqueue(new Callback<Lobby>() {
-                                            @Override
-                                            public void onResponse(Call<Lobby> call, Response<Lobby> response) {
-                                                Lobby lobby = response.body();
-                                                lobby.setCurrentMusicID(lobby.getDefaultMusicID());
-                                                SpotifyAPIService spotifyAPIService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(SpotifyAPIService.class);
-                                                Call<Track> callTrack = spotifyAPIService.getTrackById("Bearer "+accessToken, lobby.getCurrentMusicID().substring(14));
-                                                callTrack.enqueue(new Callback<Track>() {
-                                                    @RequiresApi(api = Build.VERSION_CODES.O)
-                                                    @Override
-                                                    public void onResponse(Call<Track> call, Response<Track> response) {
-                                                        track = response.body();
-                                                        LocalTime temp = null;
-                                                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                                            temp = LocalTime.now();
-                                                        }
-                                                        assert temp != null;
-                                                        lobby.setMomentOfPlay(temp.getLong(ChronoField.MILLI_OF_DAY));
-                                                        lobby.setMusicDuration(track.duration);
-                                                        lobby.setNextMusicID(lobby.getDefaultMusicID());
-                                                        lobby.setOpen(true);
-                                                        patchLobby(lobby);
-                                                        getPlaylistTracks(lobby);
-                                                        try {
-                                                            Thread.sleep(400); //ce la fa anche con 100 millis ma preferiamo tenerci un margine di 300millis
-                                                        } catch (InterruptedException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        play(lobby, accessToken);
-
-                                                    }
-
-                                                    @Override
-                                                    public void onFailure(Call<Track> call, Throwable t) {
-                                                        Log.d("DEBUG", "DOVEVA anna COSì FRATELLì");
-                                                    }
-                                                });
-                                    }
+                            public void onResponse(Call<Lobby> call, Response<Lobby> response) {
+                                Lobby lobby = response.body();
+                                openPartyButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
-                                    public void onFailure(Call<Lobby> call, Throwable t) {
+                                    public void onClick(View v) {
+                                        if(!lobby.isOpen()) {
+                                            lobby.setCurrentMusicID(lobby.getDefaultMusicID());
+                                            SpotifyAPIService spotifyAPIService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(SpotifyAPIService.class);
+                                            Call<Track> callTrack = spotifyAPIService.getTrackById("Bearer " + accessToken, lobby.getCurrentMusicID().substring(14));
+                                            callTrack.enqueue(new Callback<Track>() {
+                                                @RequiresApi(api = Build.VERSION_CODES.O)
+                                                @Override
+                                                public void onResponse(Call<Track> call, Response<Track> response) {
+                                                    track = response.body();
+                                                    LocalTime temp = null;
+                                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                                        temp = LocalTime.now();
+                                                    }
+                                                    assert temp != null;
+                                                    Log.d("DEBUG: ", track.toString());
+                                                    lobby.setMomentOfPlay(temp.getLong(ChronoField.MILLI_OF_DAY));
+                                                    lobby.setMusicDuration(track.duration);
+                                                    lobby.setNextMusicID(lobby.getDefaultMusicID());
+                                                    lobby.setOpen(true);
+                                                    openPartyButton.setText("Chiudi il Party");
 
+
+                                                    getTrackDataForView(track, accessToken);
+                                                    /*Picasso.get().load(imageOfCurrentTrack[0].getUrl()).centerCrop().into(imageCurrentTrack);*/
+
+                                                    patchLobby(lobby);
+                                                    getPlaylistTracks(lobby);
+                                                    try {
+                                                        Thread.sleep(400); //ce la fa anche con 100 millis ma preferiamo tenerci un margine di 300millis
+                                                    } catch (InterruptedException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    if(constraintLayoutCardView.getVisibility() == View.INVISIBLE){
+                                                        constraintLayoutCardView.setVisibility(View.VISIBLE);
+                                                    }
+                                                    play(lobby, accessToken);
+
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<Track> call, Throwable t) {
+                                                    Log.d("DEBUG", "DOVEVA anna COSì FRATELLì");
+                                                }
+                                            });
+                                        }
+                                        else{
+                                            onBackPressed();
+                                        }
                                     }
                                 });
+
+                            }
+                            @Override
+                            public void onFailure(Call<Lobby> call, Throwable t) {
 
                             }
                         });
@@ -219,10 +251,11 @@ public class PartyHostActivity extends AppCompatActivity {
             CurrentlyPlayingContext currentlyPlayingContext;
             int durationTrack;
 
-
             try {
 
                 currentlyPlayingContext = call.execute().body();
+                assert currentlyPlayingContext != null;
+
                 //Response<CurrentlyPlayingContext> response = call.execute();
                 //Log.d("RESPONSE.CODE", response.message()+"");
                 //Log.d("RESPONSE.CODE", response.body().getItem()+"");
@@ -281,6 +314,7 @@ public class PartyHostActivity extends AppCompatActivity {
                             lobby.setMomentOfPlay(temp.getLong(ChronoField.MILLI_OF_DAY));
                             lobby.setMusicDuration(track.duration);
                             Log.d("DEBUG_SYNCH: ", "sto per effettuare la patch e poi la play");
+                            getTrackDataForView(track, accessToken);
                             patchLobby(lobby);
                             Log.d("DEBUG_SYNCH: ", "ho fatto la patch sto per fare la play");
                             play(lobby, accessToken);
@@ -358,6 +392,9 @@ public class PartyHostActivity extends AppCompatActivity {
                             }
                         };
                         setIsAccepted.start();
+                        if(!lobby.isAccepted()) {
+                            Toast.makeText(PartyHostActivity.this, "Musica accettata", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });//endVote
 
@@ -432,7 +469,7 @@ public class PartyHostActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Track> call, Response<Track> response) {
                 if(response.body() != null) {
-                    textTrackName.setText(response.body().name);
+                    getNextTrackDataForView(response.body(), accessToken);
                     Log.d("NAME", response.body() + "");
                     Log.d("URI", uriOfTrack + "");
                     Thread setNextMusic = new Thread() {
@@ -450,6 +487,58 @@ public class PartyHostActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Track> call, Throwable t) {
                 Log.d("DEBUG_GET_TRACK_PLAYLIS", t+"");
+            }
+        });
+    }
+
+    public void getTrackDataForView(Track track, String accessToken){
+        ImageView imageCurrentTrack = findViewById(R.id.songImageHost);
+        TextView trackName = findViewById(R.id.nameCurrentTrack);
+        TextView albumName = findViewById(R.id.nameCurrentAlbum);
+        TextView artistName = findViewById(R.id.nameCurrentArtist);
+        TextView title = findViewById(R.id.titleHost);
+        SpotifyAPIService serviceForData = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(SpotifyAPIService.class);
+        Call<Album> callForData = serviceForData.getAlbumTrack("Bearer " + accessToken, track.album.uri.substring(14));
+        callForData.enqueue(new Callback<Album>() {
+            @Override
+            public void onResponse(Call<Album> call, Response<Album> response) {
+                Image[] imagesOfCurrentTrack = response.body().getImages();
+                Artist[] artistsOfCurrentTrack = response.body().getArtists();
+                Picasso.get().load(imagesOfCurrentTrack[0].getUrl()).into(imageCurrentTrack);
+                title.setText("Attualmente in riproduzione:");
+                trackName.setText(track.name);
+                albumName.setText(response.body().getName());
+                artistName.setText((artistsOfCurrentTrack[0].getName()));
+            }
+
+            @Override
+            public void onFailure(Call<Album> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void getNextTrackDataForView(Track track, String accessToken){
+        ImageView imageCurrentTrack = findViewById(R.id.imageNextTrack);
+        TextView trackNextName = findViewById(R.id.trackName);
+        TextView albumNextName = findViewById(R.id.nameNextAlbum);
+        TextView artistNextName = findViewById(R.id.nameNextArtist);
+        SpotifyAPIService serviceForData = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(SpotifyAPIService.class);
+        Call<Album> callForData = serviceForData.getAlbumTrack("Bearer " + accessToken, track.album.uri.substring(14));
+        callForData.enqueue(new Callback<Album>() {
+            @Override
+            public void onResponse(Call<Album> call, Response<Album> response) {
+                Image[] imagesOfCurrentTrack = response.body().getImages();
+                Artist[] artistsOfCurrentTrack = response.body().getArtists();
+                Picasso.get().load(imagesOfCurrentTrack[0].getUrl()).into(imageCurrentTrack);
+                trackNextName.setText(track.name);
+                albumNextName.setText(response.body().getName());
+                artistNextName.setText((artistsOfCurrentTrack[0].getName()));
+            }
+
+            @Override
+            public void onFailure(Call<Album> call, Throwable t) {
+
             }
         });
     }
@@ -481,6 +570,7 @@ public class PartyHostActivity extends AppCompatActivity {
                 Lobby lobby = response.body();
                 assert lobby != null;
                 lobby.setOpen(false);
+                lobby.setAccepted(false);
                 Log.d("DEBUG_ONBACK_LOBBY: ", lobby.getLobbyID()+"");
                 LobbyService lobbyService2 = RetrofitInstance.getRetrofitInstance().create(LobbyService.class);
                 Call<Lobby> callPatchLobby = lobbyService2.patchLobby(lobby.getLobbyID(), lobby);
@@ -502,6 +592,8 @@ public class PartyHostActivity extends AppCompatActivity {
                 Log.d("DEBUG_ONBACK_FAIL", t.toString()+"");
             }
         });
+
+        constraintLayoutCardView.setVisibility(View.INVISIBLE);
 
         if(pollingPlaybackState != null)
             pollingPlaybackState.cancel(true);

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="210dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="180dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        app:cardCornerRadius="8dp"
+        android:backgroundTint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:maxLines="1"
+                android:background="#e7e8fd"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:maxLines="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:text="Vuoi che sia questa la prossima musica?"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="17sp"
+                android:background="#e7e8fd"
+                />
+
+            <ImageView
+                android:id="@+id/bordo1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:src="@mipmap/bordo_grosso"
+                />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal">
+
+
+                <ImageView
+                    android:id="@+id/imageNextTrack"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/trackName"
+                        android:layout_width="match_parent"
+                        android:layout_height="23dp"
+                        android:layout_marginTop="15dp"
+                        android:maxLines="1"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="5dp"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        android:textColor="@color/black"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/nameNextArtist"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="5dp"
+                        android:maxLines="1"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="15dp"
+                        android:textSize="14sp"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        android:textColor="@color/gray" />
+
+                    <TextView
+                        android:id="@+id/nameNextAlbum"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="5dp"
+                        android:maxLines="1"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="15dp"
+                        android:textSize="14sp"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        android:textColor="@color/gray" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/bordo2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/TitleLobbyPubbliche"
+                android:src="@mipmap/bordo_grosso"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <Button
+                    android:id="@+id/endVote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@android:color/holo_purple"
+                    android:background="@android:color/transparent"
+                    android:text="accetta"
+                />
+
+                <Button
+                    android:id="@+id/decline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@android:color/holo_purple"
+                    android:background="@android:color/transparent"
+                    android:text="rifiuta"
+                    />
+
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,23 +17,88 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/titleClient"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Client"
-        android:textColor="@android:color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="23dp"
+        android:layout_marginTop="10dp"
+        android:maxLines="1"
+        android:paddingRight="5dp"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.09"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/includeAppBar" />
+
+    <ImageView
+        android:id="@+id/songImageClient"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleClient"
+        android:visibility="invisible"
+        />
+
+    <TextView
+        android:id="@+id/nameCurrentTrackClient"
+        android:layout_width="0dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="15dp"
+        android:maxLines="1"
+        android:paddingLeft="10dp"
+        android:paddingRight="5dp"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/songImageClient"
+        app:layout_constraintTop_toBottomOf="@+id/titleClient" />
+
+    <TextView
+        android:id="@+id/nameCurrentArtistClient"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="5dp"
+        android:maxLines="1"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:textSize="14sp"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="@color/gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/songImageClient"
+        app:layout_constraintTop_toBottomOf="@+id/nameCurrentTrackClient" />
+
+    <TextView
+        android:id="@+id/nameCurrentAlbumClient"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="5dp"
+        android:maxLines="1"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:textSize="14sp"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="@color/gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/songImageClient"
+        app:layout_constraintTop_toBottomOf="@+id/nameCurrentArtistClient" />
+
 
     <Button
         android:id="@+id/joinParty"
-        android:layout_width="130dp"
+        android:layout_width="0dp"
         android:layout_height="80dp"
-        android:layout_marginTop="200dp"
-        android:text="Join Party"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:backgroundTint="#e7e8fd"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

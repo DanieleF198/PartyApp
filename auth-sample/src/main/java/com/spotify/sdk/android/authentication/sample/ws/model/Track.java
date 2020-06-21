@@ -7,6 +7,7 @@ public class Track {
 
     private String id;
     private int duration_ms;
+    private Image[] images;
 
     public String getId() {
         return id;

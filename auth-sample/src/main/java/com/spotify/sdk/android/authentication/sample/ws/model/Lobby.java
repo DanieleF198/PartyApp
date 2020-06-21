@@ -15,6 +15,7 @@ public class Lobby implements Comparable< Lobby >, Serializable {
     private String playlistLobby;
     private String currentMusicID;
     private String nextMusicID;
+    private String videoUrl;
     private long momentOfPlay;
     private long musicDuration;
     private boolean isOpen;
@@ -120,6 +121,14 @@ public class Lobby implements Comparable< Lobby >, Serializable {
 
     public void setCurrentMusicID(String currentMusicID) {
         this.currentMusicID = currentMusicID;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 
     @Override

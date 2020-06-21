@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,14 +28,12 @@ import com.spotify.sdk.android.auth.AuthorizationResponse;
 import com.spotify.sdk.android.authentication.sample.R;
 import com.spotify.sdk.android.authentication.sample.ws.model.Album;
 import com.spotify.sdk.android.authentication.sample.ws.model.Artist;
-import com.spotify.sdk.android.authentication.sample.ws.model.CurrentlyPlayingContext;
 import com.spotify.sdk.android.authentication.sample.ws.model.Image;
 import com.spotify.sdk.android.authentication.sample.ws.model.Lobby;
 import com.spotify.sdk.android.authentication.sample.ws.model.PlayResumePlayback;
 import com.spotify.sdk.android.authentication.sample.ws.retrofit.RetrofitInstance;
 import com.spotify.sdk.android.authentication.sample.ws.retrofit.RetrofitInstanceSpotifyApi;
 import com.spotify.sdk.android.authentication.sample.ws.service.LobbyService;
-import com.spotify.sdk.android.authentication.sample.ws.service.PlayerService;
 import com.spotify.sdk.android.authentication.sample.ws.service.SpotifyAPIService;
 import com.squareup.picasso.Picasso;
 
@@ -68,12 +68,20 @@ public class ClientPartyActivity extends AppCompatActivity {
     private LocalTime temp;
     private PollingCurrentMusic pollingCurrentMusic;
     private boolean isJoined;
+    private WebView webView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_party);
+        setContentView(R.layout.activity_party_client);
+
+
+        webView = findViewById(R.id.videoWebView);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebChromeClient(new WebChromeClient(){
+
+        });
     }
 
     @Override
@@ -121,7 +129,9 @@ public class ClientPartyActivity extends AppCompatActivity {
                                         public void onResponse(Call<Lobby> call, Response<Lobby> response) {
                                             Lobby lobby = response.body();
                                             assert lobby != null;
-                                            Log.d("DEBUG_LOBBY: ", lobby.getCurrentMusicID() + "");
+
+                                            webView.loadData("<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/"+lobby.getVideoUrl()+"\" frameborder=\"0\" allowfullscreen></iframe>", "text/html","utf-8");
+
                                             if (!lobby.isOpen()) {
                                                 Toast.makeText(ClientPartyActivity.this, "Il party è chiuso", Toast.LENGTH_SHORT).show();
                                             } else {

@@ -96,23 +96,33 @@ public class MainActivity extends AppCompatActivity {
     private Fragment selectedFragment2;
     private Fragment selectedFragment3;
     private Fragment currentFrag;
+    private boolean alignmentMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        alignmentMode = false;
         Fragment selectedFragment = new HomepageFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
         currentFrag = selectedFragment;
 
         BottomAppBar bottomAppBar = (BottomAppBar) findViewById(R.id.bottom_app_bar);
+        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.fab);
         setSupportActionBar(bottomAppBar);
 
         bottomAppBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("DEBUG_LEFT_MENU", view+"");
+                if(!alignmentMode) {
+                    bottomAppBar.setFabAlignmentMode(BottomAppBar.FAB_ALIGNMENT_MODE_END);
+                    alignmentMode = true;
+                } else {
+                    bottomAppBar.setFabAlignmentMode(BottomAppBar.FAB_ALIGNMENT_MODE_CENTER);
+                    alignmentMode = false;
+                }
             }
         });
 
@@ -147,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.fab);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

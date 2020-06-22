@@ -18,11 +18,12 @@
             android:layout_gravity="bottom"
             app:backgroundTint="@color/white"
             app:fabAlignmentMode="center"
+            app:fabAnimationMode="slide"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/main_menu"
-            app:navigationIcon="@drawable/ic_menu_black_24dp" />
+            app:navigationIcon="@drawable/ic_joystickicon_87903" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"

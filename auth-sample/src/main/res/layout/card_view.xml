@@ -3,17 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="210dp">
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
-        android:layout_height="180dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        app:cardCornerRadius="8dp"
         android:backgroundTint="@color/white"
+        app:cardCornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,30 +25,27 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:maxLines="1"
-                android:background="#e7e8fd"
-                />
+                android:background="#FF8B71D7"
+                android:maxLines="1" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
+                android:background="#FF8B71D7"
                 android:maxLines="1"
                 android:paddingLeft="10dp"
                 android:paddingRight="5dp"
                 android:text="Vuoi che sia questa la prossima musica?"
                 android:textAppearance="?attr/textAppearanceSubtitle1"
-                android:textColor="@color/black"
-                android:textStyle="bold"
+                android:textColor="@color/white"
                 android:textSize="17sp"
-                android:background="#e7e8fd"
-                />
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/bordo1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:src="@mipmap/bordo_grosso"
-                />
+                android:src="@mipmap/bordo_grosso" />
 
 
             <LinearLayout
@@ -62,8 +58,8 @@
                     android:id="@+id/imageNextTrack"
                     android:layout_width="90dp"
                     android:layout_height="90dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="10dp"/>
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -90,9 +86,9 @@
                         android:maxLines="1"
                         android:paddingLeft="10dp"
                         android:paddingRight="15dp"
-                        android:textSize="14sp"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
-                        android:textColor="@color/gray" />
+                        android:textColor="@color/gray"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/nameNextAlbum"
@@ -102,9 +98,9 @@
                         android:maxLines="1"
                         android:paddingLeft="10dp"
                         android:paddingRight="15dp"
-                        android:textSize="14sp"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
-                        android:textColor="@color/gray" />
+                        android:textColor="@color/gray"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -116,8 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@id/TitleLobbyPubbliche"
-                android:src="@mipmap/bordo_grosso"
-                />
+                android:src="@mipmap/bordo_grosso" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -127,28 +122,22 @@
                     android:id="@+id/endVote"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textColor="@android:color/holo_purple"
                     android:background="@android:color/transparent"
                     android:text="accetta"
-                />
+                    android:textColor="#FF8B71D7" />
 
                 <Button
                     android:id="@+id/decline"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textColor="@android:color/holo_purple"
                     android:background="@android:color/transparent"
                     android:text="rifiuta"
-                    />
-
-
+                    android:textColor="#FF8B71D7" />
 
 
             </LinearLayout>
 
         </LinearLayout>
-
-
 
 
     </androidx.cardview.widget.CardView>

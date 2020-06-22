@@ -1,120 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.PartyHostActivity"
+    android:clipChildren="false"
     android:clipToPadding="false"
-    android:clipChildren="false">
+    android:orientation="vertical"
+    tools:context=".activity.PartyHostActivity">
 
     <include
         android:id="@+id/includeAppBar"
         layout="@layout/appbar"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content" />
 
-    <include
-        android:id="@+id/cardView"
-        layout="@layout/card_view"
-        android:visibility="invisible"
-        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@id/openParty"
+        android:layout_below="@id/includeAppBar">
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/scrollChild"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/titleHost"
+                android:layout_width="wrap_content"
+                android:layout_height="23dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:maxLines="1"
+                android:paddingRight="35dp"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/songImageHost"
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/titleHost" />
+
+
+            <TextView
+                android:id="@+id/nameCurrentTrack"
+                android:layout_width="0dp"
+                android:layout_height="23dp"
+                android:layout_marginTop="10dp"
+                android:maxLines="1"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/songImageHost"
+                app:layout_constraintTop_toBottomOf="@id/titleHost" />
+
+            <TextView
+                android:id="@+id/nameCurrentArtist"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="5dp"
+                android:maxLines="1"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/songImageHost"
+                app:layout_constraintTop_toBottomOf="@id/nameCurrentTrack" />
+
+            <TextView
+                android:id="@+id/nameCurrentAlbum"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:maxLines="1"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/songImageHost"
+                app:layout_constraintTop_toBottomOf="@id/nameCurrentArtist" />
+
+            <include
+                android:id="@+id/cardView"
+                layout="@layout/card_view"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="30dp"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/songImageHost" />
+
+            <TextView
+                android:id="@+id/sponsorizedTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="44dp"
+                android:text="Sponsorizzato dall'host:"
+                android:textSize="17sp"
+                android:layout_marginStart="10dp"
+                android:visibility="invisible"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardView" />
+
+            <include
+                android:id="@+id/includeWebView"
+                layout="@layout/video_party_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sponsorizedTitle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+    </LinearLayout>
 
     <Button
         android:id="@+id/openParty"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:backgroundTint="#e7e8fd"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/titleHost"
-        android:layout_width="wrap_content"
-        android:layout_height="23dp"
-        android:layout_marginTop="10dp"
-        android:maxLines="1"
-        android:paddingRight="5dp"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
-        android:textColor="@color/black"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.09"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/includeAppBar" />
-
-    <ImageView
-        android:id="@+id/songImageHost"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleHost" />
-
-    <!--<TextView
-        android:id="@+id/lobbyRowName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/mtrl_list_item_icon"
-        android:paddingTop="16dp"
-        android:paddingEnd="16dp"
-        android:maxLines="1"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
-        android:textColor="@color/black"/>-->
-
-    <TextView
-        android:id="@+id/nameCurrentTrack"
-        android:layout_width="0dp"
-        android:layout_height="23dp"
-        android:layout_marginTop="15dp"
-        android:maxLines="1"
-        android:paddingLeft="10dp"
-        android:paddingRight="5dp"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
-        android:textColor="@color/black"
-        android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/songImageHost"
-        app:layout_constraintTop_toBottomOf="@+id/titleHost" />
-
-    <TextView
-        android:id="@+id/nameCurrentArtist"
-        android:layout_width="0dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="5dp"
-        android:maxLines="1"
-        android:paddingLeft="10dp"
-        android:paddingRight="15dp"
-        android:textSize="14sp"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
-        android:textColor="@color/gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/songImageHost"
-        app:layout_constraintTop_toBottomOf="@+id/nameCurrentTrack" />
-
-    <TextView
-        android:id="@+id/nameCurrentAlbum"
-        android:layout_width="0dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="5dp"
-        android:maxLines="1"
-        android:paddingLeft="10dp"
-        android:paddingRight="15dp"
-        android:textSize="14sp"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
-        android:textColor="@color/gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/songImageHost"
-        app:layout_constraintTop_toBottomOf="@+id/nameCurrentArtist" />
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/white"
+        android:backgroundTint="#FF8B71D7" />
 
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

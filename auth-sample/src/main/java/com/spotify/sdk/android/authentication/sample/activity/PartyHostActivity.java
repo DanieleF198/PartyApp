@@ -11,6 +11,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -72,6 +74,7 @@ public class PartyHostActivity extends AppCompatActivity {
     private Button endVoteButton;
     private Button declineButton;
     private ConstraintLayout constraintLayoutCardView;
+    private TextView titleSponsorized;
     private TextView textTrackName;
     private static final int REQUEST_CODE = 1337;
     private String accessToken;
@@ -81,6 +84,7 @@ public class PartyHostActivity extends AppCompatActivity {
     private String uriOfTrack;
     private SpotifyAPIService spotifyAPIService;
     private com.spotify.sdk.android.authentication.sample.ws.model.Album albumCurrentTrack;
+    private WebView webView;
 
 
 
@@ -98,6 +102,12 @@ public class PartyHostActivity extends AppCompatActivity {
             openPartyButton.setText("Chiudi il Party");
         }
 
+        webView = findViewById(R.id.videoWebView);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebChromeClient(new WebChromeClient(){
+
+        });
+
     }
 
     @Override
@@ -110,6 +120,7 @@ public class PartyHostActivity extends AppCompatActivity {
         declineButton = findViewById(R.id.decline);
         textTrackName = findViewById(R.id.trackName);
         constraintLayoutCardView = findViewById(R.id.cardView);
+        titleSponsorized = findViewById(R.id.sponsorizedTitle);
         random = new Random();
 
 
@@ -145,6 +156,7 @@ public class PartyHostActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(View v) {
                                         if(!lobby.isOpen()) {
+                                            webView.loadData("<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/"+lobby.getVideoUrl()+"\" frameborder=\"0\" allowfullscreen></iframe>", "text/html","utf-8");
                                             lobby.setCurrentMusicID(lobby.getDefaultMusicID());
                                             SpotifyAPIService spotifyAPIService = RetrofitInstanceSpotifyApi.getRetrofitInstance().create(SpotifyAPIService.class);
                                             Call<Track> callTrack = spotifyAPIService.getTrackById("Bearer " + accessToken, lobby.getCurrentMusicID().substring(14));
@@ -176,9 +188,14 @@ public class PartyHostActivity extends AppCompatActivity {
                                                     } catch (InterruptedException e) {
                                                         e.printStackTrace();
                                                     }
+
                                                     if(constraintLayoutCardView.getVisibility() == View.INVISIBLE){
                                                         constraintLayoutCardView.setVisibility(View.VISIBLE);
                                                     }
+
+                                                    if(titleSponsorized.getVisibility() == View.INVISIBLE)
+                                                        titleSponsorized.setVisibility(View.VISIBLE);
+
                                                     play(lobby, accessToken);
 
                                                 }

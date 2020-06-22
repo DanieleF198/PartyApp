@@ -69,6 +69,7 @@ public class ClientPartyActivity extends AppCompatActivity {
     private PollingCurrentMusic pollingCurrentMusic;
     private boolean isJoined;
     private WebView webView;
+    private TextView titleSponsorized;
 
 
     @Override
@@ -76,7 +77,7 @@ public class ClientPartyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_party_client);
 
-
+        titleSponsorized = findViewById(R.id.sponsorizedTitle);
         webView = findViewById(R.id.videoWebView);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebChromeClient(new WebChromeClient(){
@@ -130,15 +131,18 @@ public class ClientPartyActivity extends AppCompatActivity {
                                             Lobby lobby = response.body();
                                             assert lobby != null;
 
-                                            webView.loadData("<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/"+lobby.getVideoUrl()+"\" frameborder=\"0\" allowfullscreen></iframe>", "text/html","utf-8");
-
                                             if (!lobby.isOpen()) {
                                                 Toast.makeText(ClientPartyActivity.this, "Il party è chiuso", Toast.LENGTH_SHORT).show();
                                             } else {
                                                 try {
                                                     play(lobby, accessToken);
+                                                    if(titleSponsorized.getVisibility() == View.INVISIBLE)
+                                                        titleSponsorized.setVisibility(View.VISIBLE);
+                                                    webView.loadData("<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/"+lobby.getVideoUrl()+"\" frameborder=\"0\" allowfullscreen></iframe>", "text/html","utf-8");
+
                                                     enterPartyButton.setText("Esci dal Party");
                                                     isJoined = true;
+
                                                 } catch (IOException e) {
                                                     e.printStackTrace();
                                                 }
